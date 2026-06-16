@@ -76,3 +76,34 @@ No account required. No data sent to this site. API keys held in browser memory 
 ---
 
 MIT Licence
+
+
+---
+
+## AI Trainging Rsources
+
+The spec defines variables. The rubric makes them codeable. The scoring instrument applies the
+rubric. The benchmark runs the instrument on real systems. The training pairs are derived from
+scored cases plus forensic corrections. **Change the rubric and everything downstream re-derives.**
+
+### Validity caveats
+
+- Seed codings are **illustrative**, labelled by `coding_confidence` and `evidence_basis`. They are
+  defensible judgement calls, not authoritative measurements. Real coding requires source documents
+  and at least two coders with an inter-rater agreement check.
+- Latent inputs assigned without the rubric produce numerology. The rubric is the gate, not optional.
+- Lock one log base per dataset. Mixed bases make `A_g` non-comparable across rows.
+
+### Extending the dataset
+
+- Add cases as new rows in the scoring instrument; benchmark and pairs regenerate from them.
+- Add a second coder column and compute inter-rater agreement (Krippendorff's alpha) per variable.
+- For multi-group systems, add rows sharing a `system_id`; `B(S)` and recall sum across groups.
+- For AutoTrain, convert the JSONL using the `to_text` helper in the td-training-pipeline skill.
+
+### Companion pieces
+
+- **Article** (Substack HTML): *"I Named the Silence. Now I Can Measure It."*
+- **Report** (Google Doc): *"Even-Handedness Gap Measured (Adoptee Test Instrument)"*
+- **Social assets** (Google Doc): thread, LinkedIn, Instagram, Note
+- **Framework source**: `ethical-framework-v3.1.tex` (compiles to the v3.1 PDF)
