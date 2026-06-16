@@ -44,6 +44,22 @@ input[type=range]{width:100%;accent-color:var(--orange)}
 .provider-btn{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:13px;cursor:pointer;color:var(--muted);transition:.15s;display:flex;align-items:center;gap:8px}
 .provider-btn:hover{border-color:var(--muted2);color:var(--text)}
 .provider-btn.active{border-color:var(--orange);background:rgba(212,121,44,.1);color:var(--orange)}
+
+/* ── MOBILE ──────────────────────────────────────────────────── */
+@media(max-width:640px){
+  .o-btn{padding:10px 16px;font-size:13px}
+  .o-btn-ghost{padding:10px 14px;font-size:13px}
+  .provider-btn{padding:8px 12px;font-size:12px}
+  /* bottom nav shown, side nav hidden */
+  #side-nav{display:none!important}
+  #bottom-nav{display:flex!important}
+  /* main scroll area gets bottom padding for the tab bar */
+  #main-scroll{padding-bottom:72px!important}
+}
+@media(min-width:641px){
+  #bottom-nav{display:none!important}
+  #side-nav{display:flex!important}
+}
 </style>
 </head>
 <body>
@@ -151,11 +167,11 @@ const STAGES=[
 const PROVIDERS=[
   {
     id:"anthropic",name:"Claude",sub:"Anthropic",placeholder:"sk-ant-…",
-    defaultModel:"claude-3-5-sonnet-20240620",
+    defaultModel:"claude-opus-4-5",
     models:[
-      {id:"claude-3-5-sonnet-20240620", label:"claude-3-5-sonnet (recommended)"},
-      {id:"claude-3-5-haiku-20241022",  label:"claude-3-5-haiku (fast)"},
-      {id:"claude-opus-4-5",            label:"claude-opus-4.5"},
+      {id:"claude-opus-4-5",           label:"claude-opus-4.5 (recommended)"},
+      {id:"claude-sonnet-4-6",         label:"claude-sonnet-4.6 (fast)"},
+      {id:"claude-haiku-4-5-20251001", label:"claude-haiku-4.5 (budget)"},
     ],
     hints:{
       CORS:"The Anthropic API blocks browser requests from file:// URLs.\nFix: serve this file via a local server.\n\nTerminal: python3 -m http.server 8080\nThen open: http://localhost:8080/omission-platform.html",
@@ -175,18 +191,18 @@ const PROVIDERS=[
     }
   },
   {
-    id:"openai",name:"GPT-4o",sub:"OpenAI",placeholder:"sk-proj-… or sk-…",
-    defaultModel:"gpt-4o",
+    id:"openai",name:"GPT",sub:"OpenAI",placeholder:"sk-proj-… or sk-…",
+    defaultModel:"gpt-4.1",
     models:[
-      {id:"gpt-4o",      label:"gpt-4o (recommended)"},
-      {id:"gpt-4o-mini", label:"gpt-4o-mini (cheaper)"},
-      {id:"gpt-4-turbo", label:"gpt-4-turbo"},
-      {id:"gpt-3.5-turbo",label:"gpt-3.5-turbo (budget)"},
+      {id:"gpt-4.1",      label:"gpt-4.1 (recommended)"},
+      {id:"gpt-4.1-mini", label:"gpt-4.1-mini (cheaper)"},
+      {id:"gpt-4o",       label:"gpt-4o"},
+      {id:"gpt-4o-mini",  label:"gpt-4o-mini (budget)"},
     ],
     hints:{
       429:"Quota exceeded — check your OpenAI billing at platform.openai.com/account/billing",
       401:"Invalid key — check it starts with sk-",
-      403:"Key doesn't have access to this model. Try gpt-4o-mini.",
+      403:"Key doesn't have access to this model. Try gpt-4.1-mini.",
     },
     call:async(key,model,sys,user)=>{
       let r;
@@ -202,17 +218,17 @@ const PROVIDERS=[
   },
   {
     id:"gemini",name:"Gemini",sub:"Google",placeholder:"AIza…",
-    defaultModel:"gemini-1.5-flash",
+    defaultModel:"gemini-2.5-flash",
     models:[
-      {id:"gemini-1.5-flash",       label:"gemini-1.5-flash (recommended)"},
-      {id:"gemini-1.5-flash-latest",label:"gemini-1.5-flash-latest"},
-      {id:"gemini-1.5-pro-latest",  label:"gemini-1.5-pro-latest"},
-      {id:"gemini-2.0-flash",       label:"gemini-2.0-flash (newest)"},
+      {id:"gemini-3.5-flash",     label:"gemini-3.5-flash (newest)"},
+      {id:"gemini-2.5-flash",     label:"gemini-2.5-flash (recommended)"},
+      {id:"gemini-2.5-flash-lite",label:"gemini-2.5-flash-lite (budget)"},
+      {id:"gemini-2.5-pro",       label:"gemini-2.5-pro (most capable)"},
     ],
     hints:{
       400:"Model not found. Select a different model from the dropdown.",
       403:"API key invalid or Gemini API not enabled. Check console.cloud.google.com.",
-      429:"Quota exceeded. Try gemini-1.5-flash or wait a moment.",
+      429:"Quota exceeded. Try gemini-2.5-flash-lite or wait a moment.",
     },
     call:async(key,model,sys,user)=>{
       let r;
@@ -310,7 +326,7 @@ function TreeNode({label,value,suffix="",depth=0,tone,defaultOpen=false,children
   </div>);
 }
 function NavRail({stage,setStage,unlocked,rows}){
-  return(<div className="w-44 flex-shrink-0 flex flex-col overflow-hidden" style={{background:"var(--bg)",borderRight:"1px solid var(--border)"}}>
+  return(<div id="side-nav" className="w-44 flex-shrink-0 flex flex-col overflow-hidden" style={{background:"var(--bg)",borderRight:"1px solid var(--border)"}}>
     <div className="p-4 flex items-center gap-2" style={{borderBottom:"1px solid var(--border)"}}>
       <EyeOff size={14} style={{color:"var(--orange)"}}/>
       <span className="text-[11px] font-black tracking-widest" style={{color:"var(--text)"}}>OMISSION</span>
@@ -334,9 +350,9 @@ function NavRail({stage,setStage,unlocked,rows}){
 
 /* ── STORY STAGE ────────────────────────────────────────────── */
 function StoryStage({onStart}){
-  return(<div style={{maxWidth:840,margin:"0 auto",padding:"40px 24px"}}>
+  return(<div style={{maxWidth:840,margin:"0 auto",padding:"clamp(20px,5vw,40px) clamp(16px,4vw,24px)"}}>
     <div className="o-tag">Governance Observability Platform</div>
-    <h1 className="text-4xl font-black leading-tight mt-2" style={{color:"var(--text)"}}>
+    <h1 className="text-2xl md:text-4xl font-black leading-tight mt-2" style={{color:"var(--text)"}}>
       Every governance framework has a score.<br/>
       <span style={{color:"var(--orange)"}}>This one measures what yours can't see.</span>
     </h1>
@@ -536,7 +552,7 @@ function DeepScanPanel({onResult,onSkip}){
     {/* Provider tabs */}
     <div className="mb-4">
       <div className="text-sm font-semibold mb-2" style={{color:"var(--text)"}}>AI provider</div>
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex gap-2 flex-wrap" style={{maxWidth:"100%"}}>
         {PROVIDERS.map(p=>(
           <button key={p.id} onClick={()=>switchProvider(p)} className={`provider-btn${provider.id===p.id?" active":""}`}>
             <Bot size={13}/> {p.name} <span className="text-xs" style={{opacity:.6}}>({p.sub})</span>
@@ -694,7 +710,7 @@ function ResultsStage({rows,agg,deepScanMeta}){
     <ScoringExplainer/>
 
     {/* Core metrics */}
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+    <div className="grid grid-cols-2 gap-3 mb-6">
       <MetricCard label="Current Score"      value={fmt(agg.currentScore,0)}     tone="var(--orange)" tooltip="What your framework self-reports today (W×H weighted)"/>
       <MetricCard label="True Score"         value={fmt(agg.trueScore,0)}        tone="#A78BFA"       tooltip="What it would report if every domain were fully visible"/>
       <MetricCard label="Risk Delta"         value={`+${fmt(agg.riskDelta,0)}`}  tone="var(--rose)"   tooltip="The gap — how much better you appear than the full picture"/>
@@ -759,11 +775,11 @@ function ScenarioStage({baseScores,rows}){
     <div className="o-tag">Scenario Simulation</div>
     <h2 className="text-2xl font-bold mb-2" style={{color:"var(--text)"}}>What if visibility changes?</h2>
     <p className="text-sm mb-6" style={{color:"var(--muted)"}}>Drag the W slider for any domain to simulate governance reform. Harm (H) stays fixed — this models what you <em>see</em>, not what you've fixed.</p>
-    <div className="flex gap-2 flex-wrap mb-6">
+    <div className="flex gap-2 flex-wrap mb-6" style={{maxWidth:"100%"}}>
       <button className="o-btn-ghost" style={{padding:"6px 14px",fontSize:12}} onClick={()=>setOverrides({})}>Reset to assessment</button>
       <button className="o-btn-ghost" style={{padding:"6px 14px",fontSize:12}} onClick={()=>{const o={};DOMAINS.forEach(d=>{o[d.id]={W:1.0};});setOverrides(o);}}>Make all domains mandatory</button>
     </div>
-    <div className="grid md:grid-cols-3 gap-3 mb-8">
+    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">
       <MetricCard label="Baseline score"    value={fmt(baseAgg.currentScore,0)} tone="var(--orange)"/>
       <MetricCard label="Scenario score"    value={fmt(scenAgg.currentScore,0)} tone="#A78BFA"/>
       <MetricCard label="Score change"      value={`${delta>=0?"+":""}${fmt(delta,0)}`} tone={delta<0?"var(--rose)":delta>0?"var(--orange)":"var(--muted)"} sub={delta<0?"More risk revealed":delta>0?"Looks healthier":"No change"}/>
@@ -925,10 +941,11 @@ function App(){
   const rows=useMemo(()=>perDomain(safeScores),[safeScores]);
   const agg=useMemo(()=>aggregate(rows),[rows]);
   const unlocked=completed?STAGES.map(s=>s.id):["story","assess"];
-  return(<div style={{display:"flex",height:"100dvh",width:"100%",overflow:"hidden",background:"var(--bg)",color:"var(--text)"}}>
+  return(<div style={{display:"flex",height:"100dvh",width:"100%",overflow:"hidden",background:"var(--bg)",color:"var(--text)",flexDirection:"column"}}>
+    <div style={{display:"flex",flex:1,overflow:"hidden"}}>
     <NavRail stage={stage} setStage={setStage} unlocked={unlocked} rows={rows}/>
-    <div style={{flex:1,overflowY:"auto"}}>
-      <div style={{padding:"32px 32px 80px"}}>
+    <div style={{flex:1,overflowY:"auto"}} id="main-scroll-outer">
+      <div id="main-scroll" style={{padding:"clamp(16px,4vw,32px) clamp(16px,4vw,32px) 80px"}}>
         {stage==="story"     &&<StoryStage onStart={()=>setStage("assess")}/>}
         {stage==="assess"    &&<AssessStage scores={scores} setScore={setScore} applyDeepScan={applyDeepScan} onComplete={()=>{setCompleted(true);setStage("results");}}/>}
         {stage==="results"   &&<ResultsStage rows={rows} agg={agg} deepScanMeta={deepScanMeta}/>}
@@ -938,6 +955,24 @@ function App(){
         {stage==="challenge" &&<ChallengeStage rows={rows} agg={agg}/>}
       </div>
     </div>
+    </div>
+    {/* ── MOBILE BOTTOM TAB BAR ── */}
+    <nav id="bottom-nav" style={{
+      position:"fixed",bottom:0,left:0,right:0,height:56,
+      background:"var(--bg)",borderTop:"1px solid var(--border)",
+      display:"none",alignItems:"stretch",zIndex:50
+    }}>
+      {STAGES.map(s=>{
+        const locked=!unlocked.includes(s.id),active=stage===s.id,Icon=s.icon;
+        return(<button key={s.id} disabled={locked} onClick={()=>!locked&&setStage(s.id)} style={{
+          flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
+          gap:2,border:"none",background:"transparent",cursor:locked?"not-allowed":"pointer",
+          color:active?"var(--orange)":locked?"var(--border)":"var(--muted)",
+          borderTop:active?"2px solid var(--orange)":"2px solid transparent",
+          fontSize:8,fontWeight:600,letterSpacing:".05em",textTransform:"uppercase",transition:".15s"
+        }}><Icon size={16}/><span>{s.label}</span></button>);
+      })}
+    </nav>
   </div>);
 }
 ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
