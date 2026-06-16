@@ -336,20 +336,25 @@
       difference as a quantified risk score, not a checkbox.
     </p>
 
-    <!-- Formula -->
-    <div class="art-formula">
-      <span class="formula-label">The measurement model</span>
-      Risk Delta = True Score − Current Score<br>
-      True Score &nbsp;&nbsp;= Σ H × (1 − W) &nbsp;&nbsp;<span style="color:var(--art-muted)">// harm-weighted blind spots</span><br>
-      Current Score = Σ H × W &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--art-muted)">// what decision-makers perceive</span>
+    <!-- Smoke detector analogy -->
+    <div class="art-note" style="border-left:3px solid var(--art-accent);background:rgba(247,129,102,.06);">
+      <strong style="color:var(--art-accent);">Start here — the smoke detector.</strong> A landlord who doesn't install a detector in the kitchen can claim a perfect fire safety record, because they never recorded a kitchen fire. The detector wasn't there to catch it. A governance framework works the same way: if a domain isn't being measured, its harms don't appear in the score. The framework looks healthy. The harm keeps accumulating.
     </div>
 
     <p>
-      <strong>H</strong> is harm potential (0–1): how badly this domain damages
-      the organisation if it fails. <strong>W</strong> is visibility weight
-      (0.01–1): how clearly decision-makers actually see its risks. The gap
-      between what H says is at stake and what W says is being seen is your
-      omission risk.
+      The core concept is <strong>recall</strong> — fires caught divided by total fires that actually occurred, including the ones in the rooms you weren't watching. Most governance frameworks inflate their recall by quietly shrinking the denominator: they only score the domains they already measure, then report the result as a complete picture.
+    </p>
+
+    <!-- Formula -->
+    <div class="art-formula">
+      <span class="formula-label">The measurement model — read Blind Spot first</span>
+      Blind Spot &nbsp;&nbsp;&nbsp;= avg(H × (1 − W)) &nbsp;<span style="color:var(--art-muted)">// harm currently invisible to the framework</span><br>
+      Visibility &nbsp;&nbsp;&nbsp;= avg(W) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--art-muted)">// share of harm landscape being measured</span><br>
+      Risk Delta &nbsp;&nbsp;&nbsp;= True Score − Current Score &nbsp;<span style="color:var(--art-muted)">// the gap — your hidden liability</span>
+    </div>
+
+    <p>
+      <strong>H</strong> is harm potential (0–1): how severely this domain damages people or the organisation if it fails. <strong>W</strong> is visibility (0.01–1): how clearly the framework currently sees and measures this domain. The <strong>Blind Spot</strong> is the number that matters — harm your framework cannot see. A high Current Score alongside a large Blind Spot is the most dangerous result: the framework believes it is well-governed while the actual exposure is large.
     </p>
 
     <!-- ── The 8 domains ─────────────────────────────────────────────── -->
@@ -358,20 +363,21 @@
     <p>Every assessment scores across the same eight governance areas:</p>
 
     <div class="art-domains">
-      <span class="art-domain-tag">Identity</span>
-      <span class="art-domain-tag">Process</span>
-      <span class="art-domain-tag">Data</span>
-      <span class="art-domain-tag">Risk</span>
-      <span class="art-domain-tag">Compliance</span>
-      <span class="art-domain-tag">Ethics</span>
-      <span class="art-domain-tag">Oversight</span>
-      <span class="art-domain-tag">Continuity</span>
+      <span class="art-domain-tag">Identity Continuity</span>
+      <span class="art-domain-tag">Family Integrity</span>
+      <span class="art-domain-tag">Cultural Continuity</span>
+      <span class="art-domain-tag">Information Rights</span>
+      <span class="art-domain-tag">Agency</span>
+      <span class="art-domain-tag">Consent</span>
+      <span class="art-domain-tag">Self-Determination</span>
+      <span class="art-domain-tag">Memory Preservation</span>
     </div>
 
     <p>
-      Each domain gets its own H and W rating. A domain with high harm potential
-      and low visibility is your most urgent blind spot — regardless of whether
-      your policy documentation for it is complete.
+      Each domain gets its own H (harm potential) and W (visibility) rating. A domain
+      with high harm potential and low visibility is your most urgent blind spot —
+      regardless of whether your policy documentation for it looks complete on paper.
+      The domain names in the platform match these exactly.
     </p>
 
     <!-- ── Outputs ────────────────────────────────────────────────────── -->
@@ -379,24 +385,24 @@
 
     <div class="art-outputs">
       <div class="art-output-card">
-        <span class="card-label">Output</span>
-        <span class="card-name">Current Score</span>
-        <span class="card-desc">Governance health as perceived by decision-makers (0–100)</span>
+        <span class="card-label">Primary verdict</span>
+        <span class="card-name">Blind Spot</span>
+        <span class="card-desc">The harm your framework cannot currently see. This is the number that drives the verdict — not the headline score.</span>
       </div>
       <div class="art-output-card">
         <span class="card-label">Output</span>
-        <span class="card-name">True Score</span>
-        <span class="card-desc">Governance health based on actual harm potential (0–100)</span>
-      </div>
-      <div class="art-output-card">
-        <span class="card-label">Output</span>
-        <span class="card-name">Risk Delta</span>
-        <span class="card-desc">The gap between what you perceive and what is actually at risk</span>
+        <span class="card-name">Visibility Score</span>
+        <span class="card-desc">What share of your harm landscape is actively measured. Higher is genuinely better here.</span>
       </div>
       <div class="art-output-card">
         <span class="card-label">Output</span>
         <span class="card-name">Omission Risk Index</span>
-        <span class="card-desc">0–100 index of risk hiding in blind spots across all domains</span>
+        <span class="card-desc">Penalises domains where harm is high and visibility is near-zero. One invisible high-harm domain dominates this number.</span>
+      </div>
+      <div class="art-output-card">
+        <span class="card-label">Output</span>
+        <span class="card-name">Structural Signature</span>
+        <span class="card-desc">Which known governance pattern your visibility fingerprint most closely resembles — and why that matters.</span>
       </div>
     </div>
 
@@ -416,20 +422,20 @@
       </li>
       <li>
         <div class="step-body">
-          <strong>Choose Quick Assessment (10 minutes)</strong>
-          <span>Rate each of the eight domains yourself. Set H — how badly this domain could harm the organisation if it fails (0–1). Set W — how clearly decision-makers currently see that risk (0.01–1). The scores calculate in real time.</span>
+          <strong>Choose Quick Assessment (~5 minutes)</strong>
+          <span>Rate each of the eight domains yourself across two questions: H (harm potential — how severe is the worst-case impact if this domain is ignored?) and W (visibility — how clearly does your framework currently measure this?). The Blind Spot calculates live as you answer. No account or API key needed.</span>
         </div>
       </li>
       <li>
         <div class="step-body">
-          <strong>Or run Deep Scan with your documents</strong>
-          <span>Upload governance documents — policies, frameworks, board reports. An AI model reads them and returns evidence-based H and W scores per domain, grounded in what the documents actually say rather than what you assume they say.</span>
+          <strong>Or run Deep Scan with your documents (~2 minutes)</strong>
+          <span>Upload governance documents — policies, frameworks, board reports. An AI model reads them and returns evidence-based H and W scores per domain, with a short evidence quote and confidence rating for each. Supports Claude (Anthropic), GPT-4.1 (OpenAI), and Gemini (Google). You supply your own API key — it is never sent to this server.</span>
         </div>
       </li>
       <li>
         <div class="step-body">
-          <strong>Read the Risk Delta, not just the score</strong>
-          <span>A high Current Score with a high Risk Delta is the most dangerous result. It means decision-makers believe they are well-governed while the actual exposure is large. That gap is the omission.</span>
+          <strong>Read the Blind Spot — not the headline score</strong>
+          <span>A high Current Score sounds good. It isn't necessarily. If the Blind Spot is also high, your framework appears healthy precisely because it cannot see the harm. That gap between what you report and what is actually at risk is the omission. The Blind Spot number is your real verdict.</span>
         </div>
       </li>
       <li>
@@ -443,7 +449,7 @@
     <!-- ── Deep scan note ─────────────────────────────────────────────── -->
     <div class="art-note">
       <strong>Deep Scan requires an API key.</strong> You can use Claude (Anthropic),
-      GPT-4o (OpenAI), or Gemini (Google). Keys are held in browser memory only and
+      GPT-4.1 (OpenAI), or Gemini (Google). Keys are held in browser memory only and
       never sent to this server. Get a key at
       <a href="https://console.anthropic.com" style="color:var(--art-accent2)">console.anthropic.com</a>,
       <a href="https://platform.openai.com" style="color:var(--art-accent2)">platform.openai.com</a>,
