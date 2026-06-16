@@ -2,7 +2,6 @@
 
 **Welcome → [what's your omission?](https://sbouel72.github.io/omission-platform/omission-platform-welcome.html)**
 
-https://sbouel72.github.io/omission-platform/omission-platform-welcome.html
 
 **Live demo → [Run it now](https://sbouel72.github.io/omission-platform/omission-platform.html)**
 
