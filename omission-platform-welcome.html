@@ -1,0 +1,448 @@
+<!-- OMISSION — Article Section: What This Is & How To Use It -->
+<!-- Drop this block inside your existing omission-platform.html, e.g. after the hero / before the assessment tool -->
+
+<style>
+  /* ── Article section tokens ───────────────────────────────────────── */
+  :root {
+    --art-bg:        #0d1117;
+    --art-surface:   #161b22;
+    --art-border:    #30363d;
+    --art-accent:    #f78166;       /* warm red — gap / risk signal */
+    --art-accent2:   #79c0ff;       /* blue — system / measured */
+    --art-text:      #e6edf3;
+    --art-muted:     #8b949e;
+    --art-code-bg:   #1c2128;
+    --art-font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+    --art-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  /* ── Section shell ────────────────────────────────────────────────── */
+  .omission-article {
+    background: var(--art-bg);
+    color: var(--art-text);
+    font-family: var(--art-font-body);
+    font-size: 16px;
+    line-height: 1.7;
+    padding: 80px 24px;
+  }
+
+  .omission-article .art-inner {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  /* ── Eyebrow ──────────────────────────────────────────────────────── */
+  .omission-article .art-eyebrow {
+    font-family: var(--art-font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--art-accent);
+    margin: 0 0 20px;
+  }
+
+  /* ── Headline ─────────────────────────────────────────────────────── */
+  .omission-article h2.art-headline {
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--art-text);
+    margin: 0 0 32px;
+    border: none;
+    padding: 0;
+  }
+
+  .omission-article h2.art-headline span.hl {
+    color: var(--art-accent);
+  }
+
+  /* ── Lead ─────────────────────────────────────────────────────────── */
+  .omission-article .art-lead {
+    font-size: 18px;
+    color: #b1bac4;
+    border-left: 3px solid var(--art-accent);
+    padding-left: 20px;
+    margin: 0 0 48px;
+  }
+
+  /* ── Body prose ───────────────────────────────────────────────────── */
+  .omission-article p {
+    color: #c9d1d9;
+    margin: 0 0 24px;
+  }
+
+  .omission-article h3 {
+    font-size: 13px;
+    font-family: var(--art-font-mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--art-accent2);
+    margin: 48px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--art-border);
+  }
+
+  /* ── Formula callout ──────────────────────────────────────────────── */
+  .omission-article .art-formula {
+    background: var(--art-code-bg);
+    border: 1px solid var(--art-border);
+    border-left: 3px solid var(--art-accent2);
+    border-radius: 6px;
+    padding: 20px 24px;
+    font-family: var(--art-font-mono);
+    font-size: 14px;
+    color: var(--art-accent2);
+    margin: 32px 0;
+    line-height: 2;
+  }
+
+  .omission-article .art-formula .formula-label {
+    font-size: 11px;
+    color: var(--art-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 8px;
+    font-family: var(--art-font-body);
+  }
+
+  /* ── Outputs grid ─────────────────────────────────────────────────── */
+  .omission-article .art-outputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin: 32px 0;
+  }
+
+  .omission-article .art-output-card {
+    background: var(--art-surface);
+    border: 1px solid var(--art-border);
+    border-radius: 8px;
+    padding: 20px 18px;
+  }
+
+  .omission-article .art-output-card .card-label {
+    font-family: var(--art-font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--art-accent);
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .omission-article .art-output-card .card-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--art-text);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .omission-article .art-output-card .card-desc {
+    font-size: 13px;
+    color: var(--art-muted);
+    line-height: 1.5;
+  }
+
+  /* ── Steps ────────────────────────────────────────────────────────── */
+  .omission-article .art-steps {
+    counter-reset: step;
+    list-style: none;
+    padding: 0;
+    margin: 24px 0 40px;
+  }
+
+  .omission-article .art-steps li {
+    counter-increment: step;
+    display: flex;
+    gap: 20px;
+    margin-bottom: 28px;
+    align-items: flex-start;
+  }
+
+  .omission-article .art-steps li::before {
+    content: counter(step, decimal-leading-zero);
+    font-family: var(--art-font-mono);
+    font-size: 12px;
+    color: var(--art-accent);
+    background: var(--art-code-bg);
+    border: 1px solid var(--art-border);
+    border-radius: 4px;
+    padding: 4px 8px;
+    min-width: 38px;
+    text-align: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .omission-article .art-steps li .step-body strong {
+    display: block;
+    color: var(--art-text);
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+
+  .omission-article .art-steps li .step-body span {
+    font-size: 14px;
+    color: var(--art-muted);
+    line-height: 1.6;
+  }
+
+  /* ── Domains grid ─────────────────────────────────────────────────── */
+  .omission-article .art-domains {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px 0 32px;
+  }
+
+  .omission-article .art-domain-tag {
+    font-family: var(--art-font-mono);
+    font-size: 12px;
+    background: var(--art-code-bg);
+    border: 1px solid var(--art-border);
+    border-radius: 4px;
+    padding: 5px 12px;
+    color: var(--art-accent2);
+  }
+
+  /* ── Deep scan note ───────────────────────────────────────────────── */
+  .omission-article .art-note {
+    background: var(--art-surface);
+    border: 1px solid var(--art-border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 32px 0;
+    font-size: 14px;
+    color: var(--art-muted);
+    line-height: 1.7;
+  }
+
+  .omission-article .art-note strong {
+    color: var(--art-text);
+  }
+
+  /* ── Divider ──────────────────────────────────────────────────────── */
+  .omission-article .art-divider {
+    border: none;
+    border-top: 1px solid var(--art-border);
+    margin: 56px 0;
+  }
+
+  /* ── CTA ──────────────────────────────────────────────────────────── */
+  .omission-article .art-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--art-accent);
+    color: #0d1117;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    transition: opacity 0.15s;
+    margin-top: 8px;
+  }
+
+  .omission-article .art-cta:hover { opacity: 0.85; }
+
+  /* ── Responsive ───────────────────────────────────────────────────── */
+  @media (max-width: 600px) {
+    .omission-article { padding: 48px 16px; }
+    .omission-article .art-outputs { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!--  ARTICLE SECTION                                                    -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section class="omission-article" id="what-is-omission" aria-labelledby="art-headline">
+  <div class="art-inner">
+
+    <!-- Eyebrow -->
+    <p class="art-eyebrow">What This Is &amp; How To Use It</p>
+
+    <!-- Headline -->
+    <h2 class="art-headline" id="art-headline">
+      Most governance tools measure<br>
+      what policies <em>say</em>.<br>
+      OMISSION measures what<br>
+      decision-makers <span class="hl">actually see</span>.
+    </h2>
+
+    <!-- Lead -->
+    <p class="art-lead">
+      A risk that exists but is not seen is an omission. This platform
+      quantifies the structural gap between documented coverage and actual
+      visibility — and turns that gap into an auditable score.
+    </p>
+
+    <!-- ── The core idea ─────────────────────────────────────────────── -->
+    <h3>The Problem It Solves</h3>
+
+    <p>
+      Standard governance audits ask: <em>"Do you have a policy for X?"</em>
+      That question has a fatal flaw. A policy that exists but is invisible
+      to the people responsible for acting on it provides no real protection.
+      The harm still happens. The liability still accumulates. The audit still
+      passes.
+    </p>
+
+    <p>
+      OMISSION asks the harder question: <strong>even if the policy exists —
+      how well can the people who need it actually see it?</strong>
+      It measures this gap across eight governance domains and surfaces the
+      difference as a quantified risk score, not a checkbox.
+    </p>
+
+    <!-- Formula -->
+    <div class="art-formula">
+      <span class="formula-label">The measurement model</span>
+      Risk Delta = True Score − Current Score<br>
+      True Score &nbsp;&nbsp;= Σ H × (1 − W) &nbsp;&nbsp;<span style="color:var(--art-muted)">// harm-weighted blind spots</span><br>
+      Current Score = Σ H × W &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--art-muted)">// what decision-makers perceive</span>
+    </div>
+
+    <p>
+      <strong>H</strong> is harm potential (0–1): how badly this domain damages
+      the organisation if it fails. <strong>W</strong> is visibility weight
+      (0.01–1): how clearly decision-makers actually see its risks. The gap
+      between what H says is at stake and what W says is being seen is your
+      omission risk.
+    </p>
+
+    <!-- ── The 8 domains ─────────────────────────────────────────────── -->
+    <h3>The Eight Domains</h3>
+
+    <p>Every assessment scores across the same eight governance areas:</p>
+
+    <div class="art-domains">
+      <span class="art-domain-tag">Identity</span>
+      <span class="art-domain-tag">Process</span>
+      <span class="art-domain-tag">Data</span>
+      <span class="art-domain-tag">Risk</span>
+      <span class="art-domain-tag">Compliance</span>
+      <span class="art-domain-tag">Ethics</span>
+      <span class="art-domain-tag">Oversight</span>
+      <span class="art-domain-tag">Continuity</span>
+    </div>
+
+    <p>
+      Each domain gets its own H and W rating. A domain with high harm potential
+      and low visibility is your most urgent blind spot — regardless of whether
+      your policy documentation for it is complete.
+    </p>
+
+    <!-- ── Outputs ────────────────────────────────────────────────────── -->
+    <h3>What You Get Out</h3>
+
+    <div class="art-outputs">
+      <div class="art-output-card">
+        <span class="card-label">Output</span>
+        <span class="card-name">Current Score</span>
+        <span class="card-desc">Governance health as perceived by decision-makers (0–100)</span>
+      </div>
+      <div class="art-output-card">
+        <span class="card-label">Output</span>
+        <span class="card-name">True Score</span>
+        <span class="card-desc">Governance health based on actual harm potential (0–100)</span>
+      </div>
+      <div class="art-output-card">
+        <span class="card-label">Output</span>
+        <span class="card-name">Risk Delta</span>
+        <span class="card-desc">The gap between what you perceive and what is actually at risk</span>
+      </div>
+      <div class="art-output-card">
+        <span class="card-label">Output</span>
+        <span class="card-name">Omission Risk Index</span>
+        <span class="card-desc">0–100 index of risk hiding in blind spots across all domains</span>
+      </div>
+    </div>
+
+    <hr class="art-divider">
+
+    <!-- ── How to use it ─────────────────────────────────────────────── -->
+    <h3>How To Use It</h3>
+
+    <p>There are two modes. Start with Quick Assessment. Use Deep Scan when you have documents.</p>
+
+    <ol class="art-steps">
+      <li>
+        <div class="step-body">
+          <strong>Open the tool</strong>
+          <span>No account, no installation, no data sent anywhere. Everything runs in your browser. Open the live demo and you are already inside the platform.</span>
+        </div>
+      </li>
+      <li>
+        <div class="step-body">
+          <strong>Choose Quick Assessment (10 minutes)</strong>
+          <span>Rate each of the eight domains yourself. Set H — how badly this domain could harm the organisation if it fails (0–1). Set W — how clearly decision-makers currently see that risk (0.01–1). The scores calculate in real time.</span>
+        </div>
+      </li>
+      <li>
+        <div class="step-body">
+          <strong>Or run Deep Scan with your documents</strong>
+          <span>Upload governance documents — policies, frameworks, board reports. An AI model reads them and returns evidence-based H and W scores per domain, grounded in what the documents actually say rather than what you assume they say.</span>
+        </div>
+      </li>
+      <li>
+        <div class="step-body">
+          <strong>Read the Risk Delta, not just the score</strong>
+          <span>A high Current Score with a high Risk Delta is the most dangerous result. It means decision-makers believe they are well-governed while the actual exposure is large. That gap is the omission.</span>
+        </div>
+      </li>
+      <li>
+        <div class="step-body">
+          <strong>Prioritise by harm-weighted visibility</strong>
+          <span>Domains with high H and low W are your action list. Not the domains with the most documentation — the domains where the stakes are highest and the sight lines are shortest.</span>
+        </div>
+      </li>
+    </ol>
+
+    <!-- ── Deep scan note ─────────────────────────────────────────────── -->
+    <div class="art-note">
+      <strong>Deep Scan requires an API key.</strong> You can use Claude (Anthropic),
+      GPT-4o (OpenAI), or Gemini (Google). Keys are held in browser memory only and
+      never sent to this server. Get a key at
+      <a href="https://console.anthropic.com" style="color:var(--art-accent2)">console.anthropic.com</a>,
+      <a href="https://platform.openai.com" style="color:var(--art-accent2)">platform.openai.com</a>,
+      or <a href="https://aistudio.google.com" style="color:var(--art-accent2)">aistudio.google.com</a>.
+      If running locally, Claude requires a local server due to CORS —
+      run <code style="background:var(--art-code-bg);padding:2px 6px;border-radius:3px;font-family:var(--art-font-mono)">python3 -m http.server 8080</code>
+      and open <code style="background:var(--art-code-bg);padding:2px 6px;border-radius:3px;font-family:var(--art-font-mono)">localhost:8080/omission-platform.html</code>.
+    </div>
+
+    <hr class="art-divider">
+
+    <!-- ── Who it's for ───────────────────────────────────────────────── -->
+    <h3>Who It Is For</h3>
+
+    <p>
+      OMISSION is designed for anyone who needs to answer the question a standard
+      audit cannot: <em>not whether governance exists, but whether it is seen.</em>
+      That includes governance leads running self-assessments, board members stress-testing
+      what leadership actually has visibility over, researchers studying the structural
+      gap between policy documentation and decision-maker awareness, and anyone
+      preparing evidence for an accountability review.
+    </p>
+
+    <p>
+      It is not a compliance tool. It does not tell you whether your policies meet a
+      regulatory standard. It tells you whether the people responsible for acting on
+      those policies can see them clearly enough to act. That is a different and more
+      difficult question.
+    </p>
+
+    <!-- CTA -->
+    <a class="art-cta" href="https://sbouel72.github.io/omission-platform/omission-platform.html" target="_blank" rel="noopener">
+      Run Your Assessment →
+    </a>
+
+  </div>
+</section>
+<!-- END OMISSION ARTICLE SECTION -->
