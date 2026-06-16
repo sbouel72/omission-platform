@@ -1,0 +1,60 @@
+{
+  "framework": "Adoptee Test v3 — Unified Information-Theoretic Model of Ethical Visibility",
+  "version": "3.1-dataset",
+  "generated": "2026-06-15",
+  "constants": {
+    "log_base": 2,
+    "log_base_unit": "bits",
+    "nats_conversion": "bits = nats / ln(2); 1 nat = 1.442695 bits",
+    "probability_floor": 0.01,
+    "note": "Panel art uses natural log; this dataset locks base-2 for cross-row comparability."
+  },
+  "variables": {
+    "H_g": {"name": "experienced harm to group g", "domain": "[0,1]", "type": "latent", "colour": "red"},
+    "W_g": {"name": "detection probability (P framework detects harm to g)", "domain": "(0,1]", "floor": 0.01, "type": "latent", "colour": "blue"},
+    "R_g": {"name": "rights retained by group g", "domain": "[0,1]", "type": "latent", "colour": "green"},
+    "P_g": {"name": "power possessed by group g", "domain": "[0,1]", "type": "latent", "colour": "purple"},
+    "F": {"name": "family continuity", "domain": "[0,1]", "type": "latent", "colour": "orange"},
+    "K": {"name": "knowledge of origins", "domain": "[0,1]", "type": "latent", "colour": "orange"},
+    "C": {"name": "cultural continuity", "domain": "[0,1]", "type": "latent", "colour": "green"},
+    "N": {"name": "legal identity continuity", "domain": "[0,1]", "type": "latent", "colour": "purple"},
+    "D_loss": {"name": "framework detection of identity loss", "domain": "[0,1]", "type": "latent", "colour": "blue"},
+    "H_id": {"name": "identity entropy", "domain": "[0,inf)", "type": "derived", "colour": "blue"},
+    "A_g": {"name": "omission alarm (surprisal-weighted harm)", "domain": "[0,inf)", "type": "derived", "colour": "red"},
+    "I": {"name": "identity integrity", "domain": "[0,1]", "type": "derived", "colour": "purple"},
+    "F_I": {"name": "boundary failure score", "domain": "[0,1]", "type": "derived", "colour": "red"}
+  },
+  "formulas": {
+    "identity_entropy": "H_id(g) = -log2(W_g)",
+    "detection_definition": "W_g := 2^(-H_id(g))   # makes the unification a derived identity, not an assertion",
+    "omission_alarm": "A_g = H_g * (-log2(W_g)) = H_g * H_id(g)",
+    "ethical_score": "E(S) = sum_g  W_g * (R_g - H_g)",
+    "ethical_blindness": "B(S) = sum_g  A_g = sum_g  H_g * (-log2(W_g))",
+    "identity_before": "I_before = F_b * K_b * C_b * N_b",
+    "identity_after": "I_after  = F_a * K_a * C_a * N_a",
+    "identity_delta": "dI = I_after - I_before   (<= 0)",
+    "boundary_failure": "F_I = |dI| * (1 - D_loss)",
+    "recall_system": "recall(S) = sum_g (W_g * H_g) / sum_g H_g   # harm-weighted detection rate",
+    "validity_ratio": "EthicalValidity = TP / (TP + FN)  (== recall)"
+  },
+  "graph": {
+    "nodes": [
+      {"id": "A_g", "cluster": "alarm"},
+      {"id": "H_g", "cluster": "harm"},
+      {"id": "W_g", "cluster": "detection"},
+      {"id": "H_id", "cluster": "entropy"},
+      {"id": "I", "cluster": "identity"},
+      {"id": "F_I", "cluster": "boundary"},
+      {"id": "B(S)", "cluster": "system"},
+      {"id": "recall", "cluster": "detection"}
+    ],
+    "edges": [
+      {"from": "H_g", "to": "A_g", "rel": "multiplies"},
+      {"from": "W_g", "to": "H_id", "rel": "defines (-log2)"},
+      {"from": "H_id", "to": "A_g", "rel": "multiplies"},
+      {"from": "A_g", "to": "B(S)", "rel": "sums into"},
+      {"from": "W_g", "to": "recall", "rel": "harm-weights"},
+      {"from": "I", "to": "F_I", "rel": "delta drives"}
+    ]
+  }
+}

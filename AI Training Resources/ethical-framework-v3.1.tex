@@ -1,0 +1,202 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1em}
+
+% --- legend colour bullet helper (replaces emoji that break pdflatex) ---
+\newcommand{\cbull}[1]{\textcolor{#1}{\rule[0.1ex]{0.9em}{0.9em}}}
+
+\title{Ethical Framework for Invisible Groups \\[4pt]
+\large A Corrected Information-Theoretic Model (v3.1)}
+\author{Based on the Adoptee Test and Identity Integrity}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Many ethical scoring systems assign near-zero weight to invisible groups,
+allowing severe harm to go undetected. This report presents a corrected,
+internally consistent framework that unifies harm, visibility, identity
+continuity, and information loss. The Adoptee Test is formulated as an
+omission alarm equal to harm multiplied by identity entropy. Crucially, the
+link between detection probability and identity entropy is established by
+\emph{definition} rather than assertion: detection probability is defined as
+$w(g)=2^{-H_{\mathrm{id}}(g)}$, which makes the alarm
+$A(g)=\mathcal{H}(g)\,H_{\mathrm{id}}(g)$ a derived identity, not a claimed
+coincidence. Boundary conditions are treated as discrete jumps rather than
+derivatives. Identity entropy measures truth lost about origins, and the
+Ethical Validity Ratio is shown to be recall (sensitivity). A worked example
+and a real-world mapping (sealed birth records) demonstrate applicability.
+All information quantities are expressed in bits ($\log_2$) throughout.
+\end{abstract}
+
+\section{Notation Reconciliation}
+
+The original sheets reused single symbols for incompatible quantities. The
+table below fixes every collision; all later sections use only the v3.1
+column.
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Old symbol} & \textbf{Problem} & \textbf{v3.1 symbol} \\
+\midrule
+$H(g)$ (harm) & Collides with entropy $H$ & $\mathcal{H}(g)$ \\
+$H$ (entropy) & Collides with harm & $H_{\mathrm{id}}$ (identity entropy, bits) \\
+$W(g)$ & Overloaded: weight / visibility / detection & $w(g)\in(0,1]$ (detection prob.) \\
+$T,L$ & Declared but never used & Removed; truth lost $=\Delta H_{\mathrm{id}}$ \\
+$P(g)$ (power) & Appears only in legend, no equation & Removed \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Weighted Ethical Score}
+\[
+E(S) = \sum_{g \in G} w(g)\bigl( R(g) - \mathcal{H}(g) \bigr)
+\]
+where $R(g)$ is rights retained by group $g$. If $w(g)\to 0$, the group's
+suffering does not affect $E(S)$. This is the core defect the remaining
+sections detect.
+
+\section{Adoptee Test --- Omission Alarm (Surprisal Form)}
+\[
+A(g) = \mathcal{H}(g)\,\bigl(-\log_2 w(g)\bigr)
+\]
+Here $-\log_2 w(g)$ is the information content (surprisal, in bits) of
+detecting the group. When $w(g)=1$, the group is fully visible and $A(g)=0$:
+full visibility cannot constitute an omission defect. As $w(g)\to 0^{+}$,
+$-\log_2 w(g)\to\infty$, so $A(g)\to\infty$.
+
+\noindent\textbf{Interpretation:} the more harm a group experiences while
+remaining unseen by the framework, the greater the moral defect in the
+\emph{framework itself}, not in the group.
+
+\section{Boundary-Condition Test (Discrete, Multiplicative Identity)}
+Define Identity Integrity
+\[
+I = F \cdot K \cdot C \cdot N, \qquad F,K,C,N \in [0,1],
+\]
+with $F$ = factual knowledge of origins, $K$ = kinship continuity,
+$C$ = cultural identity, $N$ = legal identity continuity. The product form is
+deliberate: if \emph{any} factor $\to 0$, then $I \to 0$. An additive form
+would let three intact factors mask the severance of a fourth, which is
+precisely the evasion this test exists to expose. Baseline (all intact) is
+$I_{\text{before}} = 1$.
+
+Adoption is a discrete event, not a smooth decline, so $dI/dt$ is undefined at
+the jump. Use the jump itself:
+\[
+\Delta I = I_{\text{after}} - I_{\text{before}} \le 0 .
+\]
+A framework passes only if it detects $|\Delta I| > \tau$ for a stated
+threshold $\tau$; otherwise Framework Failure $= 1$, with failure magnitude
+graded by the undetected $|\Delta I|$.
+
+\section{Information-Theoretic Formulation}
+The ground truth about a person's origin is a single fact: a point mass, so
+its entropy is $H_{\mathrm{id}}^{*}=0$. The adoptee's induced distribution over
+possible origins has
+\[
+H_{\mathrm{id}} = -\sum_{x} p(x)\,\log_2 p(x),
+\]
+where $p(x)$ is the probability of each possible true fact $x$. Truth lost is
+the entropy increase: $\Delta H_{\mathrm{id}} = H_{\mathrm{id}} - 0 =
+H_{\mathrm{id}}$.
+
+\paragraph{The unification (by definition, not assertion).}
+A previous draft asserted $H_{\mathrm{id}} = -\log_2 w(g)$ as if it followed
+automatically. It does not: a full-distribution entropy and a single-event
+surprisal are distinct quantities. We therefore \emph{define} the detection
+probability as
+\[
+\boxed{\,w(g) \equiv 2^{-H_{\mathrm{id}}(g)}\,}
+\qquad\Longrightarrow\qquad
+-\log_2 w(g) = H_{\mathrm{id}}(g).
+\]
+This is the probability of recovering the truth in a single draw from a
+maximum-entropy origin distribution, which is exactly the ``does the framework
+retain the truth'' reading of $w$. Substituting into Section~3 gives a clean
+derived identity:
+\[
+A(g) = \mathcal{H}(g)\,H_{\mathrm{id}}(g)
+     = \text{harm} \times \text{identity entropy}.
+\]
+Sections~3, 5, and~6 are now the same object viewed three ways, by
+construction.
+
+\paragraph{Contradiction test.} If a system tolerates large increases in
+uncertainty about selfhood ($\Delta H_{\mathrm{id}} > 0$) while claiming to
+protect human welfare, it asserts a contradiction.
+
+\section{Ethical Validity Ratio as Recall}
+Let TP $=$ rights protected and FN $=$ rights ignored. Then the Ethical
+Validity Ratio is exactly recall (sensitivity):
+\[
+\text{Recall} = \frac{\text{TP}}{\text{TP}+\text{FN}}
+= \frac{\text{Rights Protected}}{\text{Rights Protected}+\text{Rights Ignored}}.
+\]
+Naming it recall locates the construct inside standard detection theory and
+invites its companions: precision $=\text{TP}/(\text{TP}+\text{FP})$ and
+$F_1 = 2\,\text{TP}/(2\,\text{TP}+\text{FP}+\text{FN})$. When hidden rights
+(e.g.\ knowledge of origins) are added back into FN, recall collapses --- which
+is the whole point.
+
+\section{Worked Example: Adoptee Group (in bits)}
+Let a group of adoptees have standardized harm $\mathcal{H}(g)=100$ and
+detection probability $w(g)=0.1$ (10\% visibility). Then identity entropy is
+\[
+H_{\mathrm{id}}(g) = -\log_2(0.1) = \log_2(10) \approx 3.3219 \text{ bits},
+\]
+and the omission alarm is
+\[
+A(g) = \mathcal{H}(g)\,H_{\mathrm{id}}(g)
+     = 100 \times 3.3219 \approx 332.19 \text{ (harm-bits)}.
+\]
+A large alarm, flagging a severe framework defect. Contrast the weighted
+score: this group contributes $w(g)\bigl(R(g)-\mathcal{H}(g)\bigr)
+= 0.1\,(R(g)-100)$. Even with $R(g)=0$ that is only $-10$ to $E(S)$ ---
+trivially outweighed by visible groups. The same invisibility that mutes the
+group in $E(S)$ is what drives $A(g)$ toward infinity.
+
+\section{Real-World Mapping: Sealed Birth Records}
+Consider a US state that seals original birth records for adopted adults. A
+review board might score:
+\begin{itemize}
+\item Rights protected (TP): partial access to medical history.
+\item Rights ignored (FN): knowledge of identity, heritage, biological family.
+\end{itemize}
+If the board includes no adoptee representatives, modelled detection
+probability $w(g)$ is low, so $H_{\mathrm{id}}(g)$ and the omission alarm are
+high. When the ignored rights are entered into FN, recall collapses. The
+framework therefore predicts that the board's self-assessment will report a
+falsely high ethical validity --- an excludable-population artefact, not a
+real result. (The board$\to w$ link is a modelling assumption, stated as such,
+not an identity.)
+
+\section{Conclusion}
+By fixing the notation collisions, replacing the undefined derivative with a
+discrete jump, grounding the boundary test in a multiplicative identity, and
+\emph{defining} $w(g)=2^{-H_{\mathrm{id}}(g)}$ so the unification is derived
+rather than asserted, the framework becomes internally consistent and
+resistant to technical dismissal. The Adoptee Test functions as a canary: if a
+system cannot detect harm to invisible groups, the system itself is the defect.
+
+\section*{Legend (Colours)}
+\begin{itemize}
+\item[\cbull{green!60!black}] Green: protection / continuity / retained rights
+\item[\cbull{red!80!black}] Red: harm / loss / ignored rights
+\item[\cbull{blue!70!black}] Blue: visibility / detection / evaluation ($w(g)$)
+\item[\cbull{orange!85!black}] Orange: knowledge / origins ($F$)
+\item[\cbull{violet}] Purple: legal / identity continuity ($N$)
+\end{itemize}
+
+\end{document}

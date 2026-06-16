@@ -1,0 +1,43 @@
+# Adoptee Test Framework v3 — Dataset Package
+
+Generated 2026-06-15. Four interlocking dataset shapes derived from one measurement model.
+**All information quantities are in BITS (log base 2), locked as a dataset constant.**
+Panel art uses natural log; convert with `bits = nats / ln(2)` (1 nat = 1.442695 bits).
+
+## Files
+1. `adoptee-test-framework-spec.json` — machine-readable definition: variables, domains,
+   formulas, and a graph (nodes/edges) for TD-Brain / D3 ingestion. Source of truth for the schema.
+2. `adoptee-test-coding-rubric.md` — the validity gate. Anchored 0–1 scales and indicators that
+   turn the latent variables into reproducible codings. Read this before scoring anything.
+3. `adoptee-test-scoring-instrument.csv` — the instrument at (system, group) grain. Seed rows are
+   illustrative codings; derived columns (H_id, A_g, I_before/after, dI, F_I) are computed, not typed.
+4. `adoptee-test-benchmark.csv` — the instrument run on real/structural systems, ranked by
+   harm-weighted recall (most blind first). B_S = ethical blindness, F_I = boundary failure.
+5. `td_framework_pairs_v3.jsonl` — Alpaca pairs (instruction/input/output) teaching the framework,
+   the corrections, and applied codings. HAL throughout, Australian spelling, post-tragic register.
+   Named off the RSS-pipeline batch sequence on purpose — it is framework data, not article data.
+
+## How they interlock
+spec defines the variables -> rubric makes them codeable -> scoring instrument applies the rubric
+-> benchmark is the instrument on real systems -> training pairs are derived from the scored cases
+plus the forensic fixes. Change the rubric and everything downstream re-derives.
+
+## Validity caveats (non-negotiable)
+- Seed codings are **illustrative**, labelled by `coding_confidence` and `evidence_basis`. They are
+  defensible judgement calls under the rubric, not authoritative measurements. Real coding needs
+  source documents and at least two coders with an agreement check.
+- Latent inputs assigned without the rubric produce numerology. The rubric is the gate, not optional.
+- Lock one log base per dataset. Mixed bases make A_g non-comparable across rows — the exact
+  contamination this framework exists to expose.
+
+## Growth path
+- Add cases as new rows in the scoring instrument; benchmark and pairs regenerate from them.
+- Add a second coder column and compute inter-rater agreement (Krippendorff's alpha) per variable.
+- For multi-group systems, add rows sharing a `system_id`; B(S) and recall already sum across groups.
+- For AutoTrain, convert the JSONL with the `to_text` helper in the td-training-pipeline skill.
+
+## Companion pieces in this folder
+- Article (Substack HTML): "I Named the Silence. Now I Can Measure It."
+- Report (Google Doc): "Even-Handedness Gap Measured (Adoptee Test Instrument)"
+- Social Assets (Google Doc): thread, LinkedIn, Instagram, Note
+- Framework source: ethical-framework-v3.1.tex (compiles to the v3.1 PDF)
