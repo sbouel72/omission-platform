@@ -1,5 +1,9 @@
 # OMISSION — Governance Observability Platform
 
+**Welcvome → [what's your omission?](https://sbouel72.github.io/omission-platform/omission-platform-welcome.html)**
+
+https://sbouel72.github.io/omission-platform/omission-platform-welcome.html
+
 **Live demo → [Run it now](https://sbouel72.github.io/omission-platform/omission-platform.html)**
 
 A self-contained, browser-based tool that measures what governance frameworks say they cover versus what decision-makers actually see — and surfaces the gap as a quantified risk.
