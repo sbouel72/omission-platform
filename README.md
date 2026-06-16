@@ -1,6 +1,6 @@
 # OMISSION — Governance Observability Platform
 
-**Welcvome → [what's your omission?](https://sbouel72.github.io/omission-platform/omission-platform-welcome.html)**
+**Welcome → [what's your omission?](https://sbouel72.github.io/omission-platform/omission-platform-welcome.html)**
 
 https://sbouel72.github.io/omission-platform/omission-platform-welcome.html
 
