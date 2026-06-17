@@ -39,8 +39,47 @@ Upload governance documents and an AI model reads them, returning evidence-based
 |--------|---------------|
 | Current Score | Governance health as perceived by decision-makers (0-100) |
 | True Score | Governance health based on actual harm potential (0-100) |
-| Risk Delta | Gap between Current and True Score |
-| Omission Risk Index | 0-100 index of risk hiding in blind spots |
+| Risk Delta | Gap between Current and True Score — the primary verdict number |
+| Blind Spots | Domains with visibility weight W < 0.3 |
+| Omission Risk Index | H × −log₂(W) per domain — combines harm with structural invisibility |
+
+---
+
+## How to read your score
+
+**The Current Score grades the system — not the people it governs.**
+
+A high score means the governance framework is successfully concealing its harm exposure. A low score means it can no longer do so. This is intentional: the platform measures omission, not performance.
+
+| Score | For the system | For affected populations |
+|-------|---------------|--------------------------|
+| 80–100 | Succeeding | **BAD** — harm is hidden |
+| 40–79 | Under pressure | **MIXED** — partial visibility |
+| 0–39 | Failing | **GOOD** — harm is visible |
+
+> A 100/100 score is not a pass. It is proof that the framework sees nothing it was not designed to see.
+
+The **Risk Delta** is the number to act on. It measures exactly how much the system is hiding. A delta of 0 with a low Current Score means the system is transparent about its limits. A delta of 40+ means critical structural blindness.
+
+---
+
+## Exported report
+
+The **Export report** button (Challenge stage) produces a dated `.txt` file with:
+
+- Full score summary with ASCII progress bars
+- Score inversion verdict — what the score means for affected populations
+- Omission Risk verdict with rubric label and threshold scale
+- Per-domain breakdown with `[VISIBLE]` / `[ESTIMATED]` / `[BLIND SP.]` / `[OMITTED]` classification, W/H percentages, ORI values, and bar graphs
+- Domain classification lists
+- The falsifiable ask
+
+```
+╔══════════════════════════════════════════════════════════════╗
+║          O M I S S I O N   P L A T F O R M                  ║
+║          Governance Observability Report                     ║
+╚══════════════════════════════════════════════════════════════╝
+```
 
 ---
 
@@ -83,7 +122,7 @@ MIT Licence
 
 ---
 
-## AI Trainging Rsources
+## AI Training Resources
 
 The spec defines variables. The rubric makes them codeable. The scoring instrument applies the
 rubric. The benchmark runs the instrument on real systems. The training pairs are derived from
