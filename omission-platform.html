@@ -8,6 +8,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.4/babel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <style>
 *{box-sizing:border-box}
 :root{
@@ -509,6 +511,41 @@ function parseApiError(raw,provider){
   return{msg:raw,detail:""};
 }
 
+async function extractPdfText(file,onProgress){
+  const arrayBuf=await file.arrayBuffer();
+  // Set workerSrc for PDF.js
+  if(window.pdfjsLib){
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc=
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+  }
+  const pdf=await window.pdfjsLib.getDocument({data:new Uint8Array(arrayBuf)}).promise;
+  const numPages=pdf.numPages;
+  let fullText="";
+  for(let p=1;p<=numPages;p++){
+    onProgress&&onProgress(`Page ${p}/${numPages}`);
+    const page=await pdf.getPage(p);
+    // Try text layer first
+    const tc=await page.getTextContent();
+    const layerText=tc.items.map(i=>i.str).join(" ").trim();
+    if(layerText.length>80){
+      fullText+=layerText+"\n\n";
+    } else {
+      // Scanned page — render to canvas and OCR
+      const vp=page.getViewport({scale:2.0});
+      const canvas=document.createElement("canvas");
+      canvas.width=vp.width;canvas.height=vp.height;
+      const ctx=canvas.getContext("2d");
+      await page.render({canvasContext:ctx,viewport:vp}).promise;
+      onProgress&&onProgress(`OCR page ${p}/${numPages}`);
+      const worker=await Tesseract.createWorker("eng");
+      const{data:{text}}=await worker.recognize(canvas);
+      await worker.terminate();
+      fullText+=text+"\n\n";
+    }
+  }
+  return fullText;
+}
+
 function DeepScanPanel({onResult,onSkip}){
   const[files,setFiles]=useState([]);
   const[apiKey,setApiKey]=useState("");
@@ -516,6 +553,7 @@ function DeepScanPanel({onResult,onSkip}){
   const[provider,setProvider]=useState(PROVIDERS[0]);
   const[model,setModel]=useState(PROVIDERS[0].defaultModel);
   const[status,setStatus]=useState("idle");
+  const[statusDetail,setStatusDetail]=useState("");
   const[error,setError]=useState(null);
   const inputRef=useRef(null);
 
@@ -524,11 +562,27 @@ function DeepScanPanel({onResult,onSkip}){
   const run=async()=>{
     if(!files.length){setError({msg:"Upload at least one document.",detail:""});return;}
     if(!apiKey){setError({msg:`Paste your ${provider.name} API key to continue.`,detail:""});return;}
-    setStatus("reading");setError(null);
+    setStatus("reading");setStatusDetail("");setError(null);
     try{
       const textParts=[];
-      for(const f of files){const txt=await f.text();textParts.push(`### ${f.name}\n${txt.slice(0,6000)}`);}
-      setStatus("calling");
+      for(const f of files){
+        const isPdf=f.name.toLowerCase().endsWith(".pdf")||f.type==="application/pdf";
+        let txt;
+        if(isPdf){
+          setStatusDetail(`Reading ${f.name}…`);
+          try{
+            txt=await extractPdfText(f,(msg)=>setStatusDetail(msg));
+            if(!txt||txt.trim().length<50)throw new Error("empty");
+          }catch(pdfErr){
+            setStatusDetail(`PDF parse failed for ${f.name} — skipping`);
+            txt=`[PDF could not be read: ${f.name}]`;
+          }
+        } else {
+          txt=await f.text();
+        }
+        textParts.push(`### ${f.name}\n${txt.slice(0,8000)}`);
+      }
+      setStatus("calling");setStatusDetail("");
       const domainList=DOMAINS.map(d=>`- ${d.id} (${d.name}): ${d.desc}`).join("\n");
       const sys=`You are a structural visibility analyst. Score governance documents against 8 domains.\n\nDomains:\n${domainList}\n\nFor each domain return H (0–1 float), W (0.01–1 float), evidence (≤12 words), confidence (low|medium|high).\n\nRespond ONLY with valid JSON:\n{"domains":{"identity":{"H":0.5,"W":0.5,"evidence":"...","confidence":"medium"},...},"summary":"≤30 words","redFlags":["..."]}`;
       const user=textParts.join("\n\n")+"\n\nScore all 8 domains now. Return only JSON.";
@@ -593,8 +647,8 @@ function DeepScanPanel({onResult,onSkip}){
       {files.length>0
         ?<div className="text-sm font-semibold" style={{color:"var(--orange)"}}>{files.length} file{files.length>1?"s":""} ready</div>
         :<div className="text-sm" style={{color:"var(--muted)"}}>Drop documents here, or click to browse</div>}
-      <div className="text-xs mt-1" style={{color:"var(--muted2)"}}>.txt · .md · .csv · any plain-text file</div>
-      <input ref={inputRef} type="file" multiple className="hidden" onChange={e=>setFiles(p=>[...p,...Array.from(e.target.files)])}/>
+      <div className="text-xs mt-1" style={{color:"var(--muted2)"}}>.pdf · .txt · .md · .csv · plain-text — scanned PDFs OCR'd automatically</div>
+      <input ref={inputRef} type="file" multiple className="hidden" accept=".pdf,.txt,.md,.csv" onChange={e=>setFiles(p=>[...p,...Array.from(e.target.files)])}/>
     </div>
     {files.length>0&&<div className="mt-2 space-y-1.5">
       {files.map((f,i)=>(
@@ -613,7 +667,7 @@ function DeepScanPanel({onResult,onSkip}){
 
     <div className="mt-6 flex items-center gap-3">
       <button className="o-btn" onClick={run} disabled={["reading","calling"].includes(status)}>
-        {status==="reading"?<><Loader2 size={14} className="spin"/> Reading files…</>:
+        {status==="reading"?<><Loader2 size={14} className="spin"/> {statusDetail||"Reading files…"}</>:
          status==="calling"?<><Loader2 size={14} className="spin"/> Analysing with {provider.name}…</>:
          <><Sparkles size={14}/> Run deep scan</>}
       </button>
