@@ -1,0 +1,125 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>OMISSION Platform — UNCRC 1989 scored 62/100, True Score 26/100, Delta +36</title>
+<desc>Abstract radar diagram showing the UN Convention on the Rights of the Child scored against 8 governance domains. The orange polygon collapses to near-zero on Consent, Self-Determination, and Agency — the domains the Convention structurally omits.</desc>
+<style>
+  text { font-family: system-ui, -apple-system, sans-serif; }
+  .lbl    { font-size: 13px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; fill: #5A5246; }
+  .lbl-hi { font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; fill: #9A8E7A; }
+  .word   { font-size: 15px; font-weight: 800; letter-spacing: 0.28em; text-transform: uppercase; fill: #EDE8DC; }
+  .sub    { font-size: 11px; font-weight: 400; letter-spacing: 0.12em; fill: #5A5246; }
+  .mono   { font-family: monospace; font-size: 12px; fill: #5A5246; }
+  .mono-hi{ font-family: monospace; font-size: 12px; fill: #9A8E7A; }
+  .head   { font-size: 22px; font-weight: 800; fill: #EDE8DC; letter-spacing: -0.01em; }
+  .body   { font-size: 13px; font-weight: 400; fill: #9A8E7A; }
+  .tag    { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; fill: #D4792C; }
+</style>
+
+<rect width="1200" height="630" fill="#0F0E0C"/>
+<line x1="620" y1="48" x2="620" y2="582" stroke="#2F2B24" stroke-width="0.8"/>
+
+<!-- Radar rings -->
+<circle cx="310" cy="315" r="224" fill="none" stroke="#1C1A17" stroke-width="0.8"/>
+<circle cx="310" cy="315" r="168" fill="none" stroke="#1C1A17" stroke-width="0.6"/>
+<circle cx="310" cy="315" r="112" fill="none" stroke="#1C1A17" stroke-width="0.6"/>
+<circle cx="310" cy="315" r="56"  fill="none" stroke="#1C1A17" stroke-width="0.6"/>
+
+<!-- Axis spokes -->
+<line x1="310" y1="315" x2="310" y2="91"  stroke="#2F2B24" stroke-width="0.8"/>
+<line x1="310" y1="315" x2="468" y2="157" stroke="#2F2B24" stroke-width="0.8"/>
+<line x1="310" y1="315" x2="534" y2="315" stroke="#2F2B24" stroke-width="0.8"/>
+<line x1="310" y1="315" x2="468" y2="473" stroke="#2F2B24" stroke-width="0.8"/>
+<line x1="310" y1="315" x2="310" y2="539" stroke="#2F2B24" stroke-width="0.8"/>
+<line x1="310" y1="315" x2="152" y2="473" stroke="#2F2B24" stroke-width="0.8"/>
+<line x1="310" y1="315" x2="86"  y2="315" stroke="#2F2B24" stroke-width="0.8"/>
+<line x1="310" y1="315" x2="152" y2="157" stroke="#2F2B24" stroke-width="0.8"/>
+
+<!-- True ring (W=1.0) -->
+<polygon points="310,91 468,157 534,315 468,473 310,539 152,473 86,315 152,157"
+  fill="#D4792C" fill-opacity="0.04" stroke="#D4792C" stroke-width="0.8" stroke-opacity="0.2" stroke-dasharray="4,4"/>
+
+<!-- W polygon — precise UNCRC values -->
+<polygon points="310,91 468,157 478,315 373,378 310,382 270,355 288,315 302,307"
+  fill="#D4792C" fill-opacity="0.22" stroke="#D4792C" stroke-width="2"/>
+
+<!-- Gap lines — red dashed -->
+<line x1="288" y1="315" x2="86"  y2="315" stroke="#E05A5A" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
+<line x1="302" y1="307" x2="152" y2="157" stroke="#E05A5A" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>
+<line x1="270" y1="355" x2="152" y2="473" stroke="#E05A5A" stroke-width="1" stroke-dasharray="4,3" opacity="0.4"/>
+
+<!-- Vertex dots -->
+<circle cx="310" cy="91"  r="4"   fill="#D4792C"/>
+<circle cx="468" cy="157" r="4"   fill="#D4792C"/>
+<circle cx="478" cy="315" r="3.5" fill="#D4792C"/>
+<circle cx="373" cy="378" r="3"   fill="#D4792C" opacity="0.7"/>
+<circle cx="310" cy="382" r="3"   fill="#D4792C" opacity="0.6"/>
+<circle cx="270" cy="355" r="3"   fill="#E05A5A" opacity="0.8"/>
+<circle cx="288" cy="315" r="3.5" fill="#E05A5A"/>
+<circle cx="302" cy="307" r="3"   fill="#E05A5A"/>
+
+<!-- Domain labels -->
+<text x="310" y="78"  class="lbl-hi" text-anchor="middle">Identity</text>
+<text x="480" y="148" class="lbl-hi" text-anchor="start">Family</text>
+<text x="548" y="320" class="lbl-hi" text-anchor="start">Culture</text>
+<text x="478" y="488" class="lbl"    text-anchor="start">Info.</text>
+<text x="310" y="556" class="lbl"    text-anchor="middle">Memory</text>
+<text x="138" y="488" class="lbl"    text-anchor="end">Agency</text>
+<text x="72"  y="320" text-anchor="end" style="font-size:13px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;fill:#E05A5A">Consent</text>
+<text x="138" y="148" text-anchor="end" style="font-size:13px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;fill:#E05A5A">Self-det.</text>
+
+<!-- W values -->
+<text x="328" y="88"  class="mono-hi" text-anchor="start">100%</text>
+<text x="476" y="155" class="mono-hi" text-anchor="start">100%</text>
+<text x="484" y="319" class="mono-hi" text-anchor="start">75%</text>
+<text x="379" y="374" class="mono"    text-anchor="start">40%</text>
+<text x="316" y="388" class="mono"    text-anchor="start">30%</text>
+<text x="258" y="366" class="mono"    text-anchor="end">25%</text>
+<text x="282" y="308" class="mono"    text-anchor="end" style="fill:#E05A5A">10%</text>
+<text x="296" y="300" class="mono"    text-anchor="end" style="fill:#E05A5A">5%</text>
+
+<!-- RIGHT PANEL -->
+<text x="656" y="88" class="tag">Sample assessment</text>
+<text x="656" y="122" class="head">UN Convention on the</text>
+<text x="656" y="152" class="head">Rights of the Child</text>
+<text x="656" y="178" style="font-size:13px;fill:#5A5246;letter-spacing:0.06em">1989 · Scored by OMISSION Platform · Gemini 2.5 Flash</text>
+
+<line x1="656" y1="200" x2="1152" y2="200" stroke="#2F2B24" stroke-width="0.8"/>
+
+<!-- Score cards -->
+<rect x="656" y="220" width="148" height="80" rx="6" fill="#1C1A17" stroke="#2F2B24" stroke-width="0.8"/>
+<text x="668" y="240" style="font-size:9px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;fill:#5A5246">Current Score</text>
+<text x="668" y="276" style="font-size:34px;font-weight:700;font-family:monospace;fill:#D4792C">62</text>
+<text x="726" y="276" style="font-size:14px;fill:#5A5246;font-family:monospace">/100</text>
+
+<rect x="816" y="220" width="148" height="80" rx="6" fill="#1C1A17" stroke="#2F2B24" stroke-width="0.8"/>
+<text x="828" y="240" style="font-size:9px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;fill:#5A5246">True Score</text>
+<text x="828" y="276" style="font-size:34px;font-weight:700;font-family:monospace;fill:#A78BFA">26</text>
+<text x="880" y="276" style="font-size:14px;fill:#5A5246;font-family:monospace">/100</text>
+
+<rect x="976" y="220" width="176" height="80" rx="6" fill="#1C1A17" stroke="#E05A5A" stroke-width="0.8" stroke-opacity="0.4"/>
+<text x="988" y="240" style="font-size:9px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;fill:#5A5246">Risk Delta</text>
+<text x="988" y="276" style="font-size:34px;font-weight:700;font-family:monospace;fill:#E05A5A">+36</text>
+<text x="1044" y="280" style="font-size:11px;fill:#5A5246">hidden</text>
+
+<line x1="656" y1="320" x2="1152" y2="320" stroke="#2F2B24" stroke-width="0.8"/>
+
+<!-- Findings -->
+<rect x="656" y="338" width="8" height="64" rx="2" fill="#E05A5A"/>
+<text x="676" y="356" style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;fill:#E05A5A">Self-Determination — ORI 3.03 — Omitted</text>
+<text x="676" y="374" class="body">The child cannot refuse, initiate, or contest adoption.</text>
+<text x="676" y="392" class="body">Article 12 grants the right to be heard — not to decide.</text>
+
+<rect x="656" y="418" width="8" height="64" rx="2" fill="#E05A5A" opacity="0.7"/>
+<text x="676" y="436" style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;fill:#E05A5A">Consent — ORI 2.66 — Blind Spot</text>
+<text x="676" y="454" class="body">Article 21(a) requires consent from "persons concerned".</text>
+<text x="676" y="472" class="body">The adoptee is not a consenting party to their own adoption.</text>
+
+<rect x="656" y="498" width="8" height="48" rx="2" fill="#E05A5A" opacity="0.4"/>
+<text x="676" y="516" style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;fill:#9A8E7A">Agency — ORI 1.40 — Blind Spot</text>
+<text x="676" y="534" class="body">The child is the subject of proceedings. Never the initiating party.</text>
+
+<!-- Bottom bar -->
+<line x1="0" y1="596" x2="1200" y2="596" stroke="#1C1A17" stroke-width="0.8"/>
+<text x="32"   y="618" class="word">Omission</text>
+<text x="178"  y="618" class="sub">Governance Observability Platform</text>
+<text x="1168" y="618" class="sub" text-anchor="end">sbouel72.github.io/omission-platform</text>
+</svg>
