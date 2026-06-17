@@ -240,12 +240,19 @@ const PROVIDERS=[
           body:JSON.stringify({
             system_instruction:{parts:[{text:sys}]},
             contents:[{role:"user",parts:[{text:user}]}],
-            generationConfig:{maxOutputTokens:1024}
+            generationConfig:{
+              maxOutputTokens:4096,
+              responseMimeType:"application/json",
+              temperature:0.1
+            }
           })});
       }catch(e){throw new Error("CORS");}
       const d=await r.json();
       if(!r.ok)throw new Error(`HTTP_${r.status}:${d.error?.message||"Unknown error"}`);
-      return d.candidates?.[0]?.content?.parts?.[0]?.text||"";
+      // Gemini 2.5 thinking models return multiple parts — find the text part
+      const parts=d.candidates?.[0]?.content?.parts||[];
+      const textPart=parts.find(p=>p.text&&!p.thought)?.text||parts.find(p=>p.text)?.text||"";
+      return textPart;
     }
   },
 ];
