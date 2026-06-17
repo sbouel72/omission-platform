@@ -428,16 +428,16 @@ function StoryStage({onStart,institution,setInstitution}){
       <div><strong style={{color:"var(--rose)"}}>Important: this score works backwards.</strong> A high score means the governance framework is successfully hiding its harm exposure. A low score means it can no longer do so. <strong style={{color:"var(--text)"}}>100/100 is the worst possible outcome for the people the system governs.</strong></div>
     </div>
     <div className="mt-8">
-      <div className="text-sm font-semibold mb-1" style={{color:"var(--text)"}}>What are you scoring? <span style={{color:"var(--muted)",fontWeight:400}}>(optional)</span></div>
-      <div className="text-xs mb-2" style={{color:"var(--muted)"}}>Names the institution in your exported report and report filename.</div>
+      <div className="text-sm font-semibold mb-1" style={{color:"var(--text)"}}>What are you scoring?</div>
+      <div className="text-xs mb-2" style={{color:"var(--muted)"}}>Name the framework or institution. This appears in your exported report.</div>
       <input value={institution} onChange={e=>setInstitution(e.target.value)}
         placeholder="e.g. Queensland Department of Child Safety, UNCRC, HumanAbility…"
         className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none"
-        style={{background:"var(--card)",border:"1px solid var(--border)",color:"var(--text)",maxWidth:520}}
-        onKeyDown={e=>e.key==="Enter"&&onStart()}/>
+        style={{background:"var(--card)",border:`1px solid ${institution.trim()?"var(--orange)":"var(--border)"}`,color:"var(--text)",maxWidth:520}}
+        onKeyDown={e=>e.key==="Enter"&&institution.trim()&&onStart()}/>
     </div>
     <div className="mt-6">
-      <button className="o-btn" onClick={onStart} style={{fontSize:15,padding:"12px 28px"}}>
+      <button className="o-btn" onClick={onStart} disabled={!institution.trim()} style={{fontSize:15,padding:"12px 28px"}}>
         Begin assessment <ArrowRight size={16}/>
       </button>
       <span className="ml-4 text-sm" style={{color:"var(--muted2)"}}>Quick: ~5 min · AI scan: ~2 min</span>
@@ -1147,7 +1147,7 @@ ${domainLines}
       <p className="font-bold text-lg leading-snug" style={{color:"var(--text)",marginBottom:12}}>Publish the detection probability for every domain you govern.</p>
       <p className="font-bold text-lg leading-snug" style={{color:"var(--text)"}}>Recompute your ethics score with the omitted rights returned to the denominator.</p>
       <p className="mt-4 text-sm" style={{color:"var(--muted)"}}>If the score holds, say so publicly. If it drops, the gap that appears is the omission — and it now has a name.</p>
-      {institution.trim()&&<div className="mt-4 text-sm font-semibold" style={{color:"var(--rose)"}}>Institution named: {institution.trim()}</div>}
+      <div className="mt-4 text-sm font-semibold" style={{color:"var(--rose)"}}>Institution named: {institution}</div>
     </div>
     <div className="mt-8 grid grid-cols-3 gap-3">
       <MetricCard label="Reports"      value={fmt(agg.currentScore,0)} tone="var(--orange)"/>
