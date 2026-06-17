@@ -1,0 +1,156 @@
+╔══════════════════════════════════════════════════════════════╗
+║          O M I S S I O N   P L A T F O R M                  ║
+║          Governance Observability Report                     ║
+╚══════════════════════════════════════════════════════════════╝
+
+  Generated: 17/06/2026
+  Document:  UN Convention on the Rights of the Child (1989)
+  Scored by: Gemini 2.5 Flash via OMISSION Deep Scan
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  SCORE SUMMARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Current Score  ▸   65 / 100   (what the framework reports)
+  True Score     ▸   26 / 100   (if every domain were visible)
+  Risk Delta     ▸  +39          (what is being hidden)
+  Blind Spots    ▸  3 / 8          (domains W < 0.3)
+
+  Risk Delta exposure:
+  ███████████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 39
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  HOW TO READ THIS SCORE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  The Current Score grades the SYSTEM — not the people it
+  governs. A high score means the framework is successfully
+  concealing its harm exposure. A low score means it cannot.
+
+  ┌─────────────────────────────────────────────────────┐
+  │  Score  │  For the system       │  For you          │
+  ├─────────┼───────────────────────┼───────────────────┤
+  │  80–100 │  Succeeding           │  BAD — erased     │
+  │  40–79  │  Under pressure       │  MIXED — partial  │
+  │   0–39  │  Failing              │  GOOD — visible   │
+  └─────────────────────────────────────────────────────┘
+
+  THIS SCORE:  65 / 100
+  ┌─────────────────────────────────────────────────────┐
+  │  THE SYSTEM IS UNDER PRESSURE — SOME HARM IS VISIBLE│
+  │  MIXED — PARTIAL VISIBILITY                         │
+  └─────────────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  OMISSION RISK VERDICT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Blind Spot 39 — High — reform recommended
+
+  Significant harm cannot be seen by your framework.
+  A structured reform programme is recommended.
+
+  Scale:  0–10 Low    10–25 Moderate    25–40 High    40+ Critical
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PER-DOMAIN BREAKDOWN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  W = Visibility weight (1.0 = fully measured, 0.01 = absent)
+  H = Harm potential   (1.0 = catastrophic,   0.0 = none)
+  ORI = Omission Risk Index = H × −log₂(W)
+
+  [VISIBLE  ] Identity Continuity          W:100%  H: 90%  ORI:0.00
+             Visibility  ████████████████████ 100%
+             Harm        ██████████████████░░ 90%
+
+  [VISIBLE  ] Family Integrity             W:100%  H: 90%  ORI:0.00
+             Visibility  ████████████████████ 100%
+             Harm        ██████████████████░░ 90%
+
+  [VISIBLE  ] Cultural Continuity          W: 50%  H: 70%  ORI:0.70
+             Visibility  ██████████░░░░░░░░░░ 50%
+             Harm        ██████████████░░░░░░ 70%
+
+  [ESTIMATED] Information Rights           W: 40%  H: 60%  ORI:0.79
+             Visibility  ████████░░░░░░░░░░░░ 40%
+             Harm        ████████████░░░░░░░░ 60%
+
+  [BLIND SP.] Agency                       W: 10%  H: 70%  ORI:2.33
+             Visibility  ██░░░░░░░░░░░░░░░░░░ 10%
+             Harm        ██████████████░░░░░░ 70%
+
+  [BLIND SP.] Consent                      W: 10%  H: 80%  ORI:2.66
+             Visibility  ██░░░░░░░░░░░░░░░░░░ 10%
+             Harm        ████████████████░░░░ 80%
+
+  [OMITTED  ] Self-Determination           W:  5%  H: 70%  ORI:3.03
+             Visibility  █░░░░░░░░░░░░░░░░░░░ 5%
+             Harm        ██████████████░░░░░░ 70%
+
+  [ESTIMATED] Memory Preservation          W: 40%  H: 60%  ORI:0.79
+             Visibility  ████████░░░░░░░░░░░░ 40%
+             Harm        ████████████░░░░░░░░ 60%
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  DOMAIN CLASSIFICATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  VISIBLE   (W ≥ 0.5):  Identity Continuity, Family Integrity,
+                         Cultural Continuity
+  ESTIMATED (W 0.1–0.5): Information Rights, Memory Preservation
+  BLIND SP. (W < 0.3):  Agency, Consent
+  OMITTED   (W < 0.1):  Self-Determination
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ANALYST NOTE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  The UNCRC names identity, family, and cultural rights at
+  treaty level — hence Identity Continuity and Family Integrity
+  score W:100%. But naming is not measuring. The Convention has
+  no enforcement mechanism, no data collection requirement, no
+  mandatory reporting on outcomes for separated children, and
+  no provision for the child's own consent to adoption
+  proceedings.
+
+  The three most damning numbers:
+
+  SELF-DETERMINATION — ORI 3.03, W:5%, OMITTED
+  Highest omission risk in the document. The child has no
+  standing to refuse, initiate, or contest adoption. Article 12
+  gives them the right to be heard — not to decide. That gap
+  is structural and deliberate.
+
+  CONSENT — ORI 2.66, W:10%, BLIND SPOT
+  Article 21(a) requires informed consent from "persons
+  concerned" — read as birth parents and adopters. The adoptee
+  is not a consenting party to their own adoption under the
+  Convention's framework.
+
+  AGENCY — ORI 2.33, W:10%, BLIND SPOT
+  The child is the subject of proceedings throughout. Never
+  the initiating party.
+
+  The Delta of 39 sits one point below Critical. The UNCRC
+  reports 65/100 to itself. The true score if every domain
+  were fully visible is 26/100. That 39-point gap is what the
+  Convention cannot see about itself — and what forced adoptees
+  have been saying for fifty years.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  THE FALSIFIABLE ASK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Publish the detection probability for every domain you govern.
+  Recompute your ethics score with the omitted rights returned
+  to the denominator.
+
+  If the score holds, say so publicly.
+  If it drops, the gap that appears is the omission —
+  and it now has a name.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Generated by OMISSION Governance Observability Platform
+  https://github.com/sbouel72/omission-platform
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
