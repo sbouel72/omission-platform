@@ -584,10 +584,14 @@ function DeepScanPanel({onResult,onSkip}){
       }
       setStatus("calling");setStatusDetail("");
       const domainList=DOMAINS.map(d=>`- ${d.id} (${d.name}): ${d.desc}`).join("\n");
-      const sys=`You are a structural visibility analyst. Score governance documents against 8 domains.\n\nDomains:\n${domainList}\n\nFor each domain return H (0–1 float), W (0.01–1 float), evidence (≤12 words), confidence (low|medium|high).\n\nRespond ONLY with valid JSON:\n{"domains":{"identity":{"H":0.5,"W":0.5,"evidence":"...","confidence":"medium"},...},"summary":"≤30 words","redFlags":["..."]}`;
-      const user=textParts.join("\n\n")+"\n\nScore all 8 domains now. Return only JSON.";
+      const sys=`You are a JSON-only scoring API. You output exclusively raw JSON with no explanation, no preamble, no markdown, no code fences.\n\nTask: score the provided governance document against exactly these 8 domain IDs:\n${domainList}\n\nFor each domain assess:\n- H: harm potential float 0.0–1.0 (0=no harm if invisible, 1=catastrophic)\n- W: visibility weight float 0.01–1.0 (0.01=completely absent from governance, 1.0=fully tracked)\n- evidence: string ≤12 words citing specific article or clause\n- confidence: exactly one of: low | medium | high\n\nYour entire response must be this JSON object and nothing else:\n{"domains":{"identity":{"H":0.75,"W":0.5,"evidence":"Article 8 preserves name and nationality","confidence":"high"},"family":{"H":0.75,"W":0.5,"evidence":"...","confidence":"medium"},"culture":{"H":0.5,"W":0.5,"evidence":"...","confidence":"medium"},"information":{"H":0.5,"W":0.5,"evidence":"...","confidence":"medium"},"agency":{"H":0.5,"W":0.5,"evidence":"...","confidence":"medium"},"consent":{"H":0.75,"W":0.25,"evidence":"...","confidence":"medium"},"selfdetermination":{"H":0.5,"W":0.5,"evidence":"...","confidence":"medium"},"memory":{"H":0.5,"W":0.5,"evidence":"...","confidence":"medium"}},"summary":"≤30 words describing overall finding","redFlags":["specific concern 1","specific concern 2"]}\n\nDo not write anything before or after the JSON object.`;
+      const user=`Document to score:\n\n${textParts.join("\n\n").slice(0,12000)}\n\nReturn only the JSON object.`;
       const txt=await provider.call(apiKey,model,sys,user);
-      const json=JSON.parse(txt.replace(/```json|```/g,"").trim());
+      // Extract JSON robustly — strip fences, find first { to last }
+      const stripped=txt.replace(/```json|```/g,"").trim();
+      const jsonStart=stripped.indexOf("{"),jsonEnd=stripped.lastIndexOf("}");
+      if(jsonStart===-1||jsonEnd===-1)throw new Error("JSON");
+      const json=JSON.parse(stripped.slice(jsonStart,jsonEnd+1));
       setStatus("done");onResult(json);
     }catch(e){setError(parseApiError(e.message,provider));setStatus("error");}
   };
