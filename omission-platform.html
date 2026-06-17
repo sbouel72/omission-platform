@@ -364,7 +364,7 @@ function NavRail({stage,setStage,unlocked,rows}){
 }
 
 /* ── STORY STAGE ────────────────────────────────────────────── */
-function StoryStage({onStart}){
+function StoryStage({onStart,institution,setInstitution}){
   return(<div style={{maxWidth:840,margin:"0 auto",padding:"clamp(20px,5vw,40px) clamp(16px,4vw,24px)"}}>
     <div className="o-tag">Governance Observability Platform</div>
     <h1 className="text-2xl md:text-4xl font-black leading-tight mt-2" style={{color:"var(--text)"}}>
@@ -428,6 +428,15 @@ function StoryStage({onStart}){
       <div><strong style={{color:"var(--rose)"}}>Important: this score works backwards.</strong> A high score means the governance framework is successfully hiding its harm exposure. A low score means it can no longer do so. <strong style={{color:"var(--text)"}}>100/100 is the worst possible outcome for the people the system governs.</strong></div>
     </div>
     <div className="mt-8">
+      <div className="text-sm font-semibold mb-1" style={{color:"var(--text)"}}>What are you scoring? <span style={{color:"var(--muted)",fontWeight:400}}>(optional)</span></div>
+      <div className="text-xs mb-2" style={{color:"var(--muted)"}}>Names the institution in your exported report and report filename.</div>
+      <input value={institution} onChange={e=>setInstitution(e.target.value)}
+        placeholder="e.g. Queensland Department of Child Safety, UNCRC, HumanAbility…"
+        className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none"
+        style={{background:"var(--card)",border:"1px solid var(--border)",color:"var(--text)",maxWidth:520}}
+        onKeyDown={e=>e.key==="Enter"&&onStart()}/>
+    </div>
+    <div className="mt-6">
       <button className="o-btn" onClick={onStart} style={{fontSize:15,padding:"12px 28px"}}>
         Begin assessment <ArrowRight size={16}/>
       </button>
@@ -1006,10 +1015,9 @@ function RedTeamStage({rows,deepScanMeta,agg}){
 }
 
 /* ── CHALLENGE ──────────────────────────────────────────────── */
-function ChallengeStage({rows,agg}){
+function ChallengeStage({rows,agg,institution}){
   const visible=rows.filter(r=>r.W>=0.5),estimated=rows.filter(r=>r.W<0.5&&r.H>0),omitted=rows.filter(r=>r.W<0.1);
   const[copied,setCopied]=useState(false);
-  const[institution,setInstitution]=useState("");
   const exportTxt=()=>{
     const rubricExp=getRubric(agg.currentScore,agg.riskDelta);
     const scoreInversion=agg.currentScore>=80?"THE SYSTEM IS SUCCEEDING AT HIDING ITS HARM EXPOSURE":agg.currentScore>=40?"THE SYSTEM IS UNDER PRESSURE — SOME HARM IS VISIBLE":"THE SYSTEM CAN NO LONGER HIDE ITS HARM EXPOSURE";
@@ -1139,12 +1147,7 @@ ${domainLines}
       <p className="font-bold text-lg leading-snug" style={{color:"var(--text)",marginBottom:12}}>Publish the detection probability for every domain you govern.</p>
       <p className="font-bold text-lg leading-snug" style={{color:"var(--text)"}}>Recompute your ethics score with the omitted rights returned to the denominator.</p>
       <p className="mt-4 text-sm" style={{color:"var(--muted)"}}>If the score holds, say so publicly. If it drops, the gap that appears is the omission — and it now has a name.</p>
-      <div className="mt-5">
-        <div className="text-xs font-semibold mb-1" style={{color:"var(--muted)"}}>Name the institution you are challenging (optional — appears in exported report)</div>
-        <input value={institution} onChange={e=>setInstitution(e.target.value)} placeholder="e.g. Queensland Department of Child Safety, UNCRC, HumanAbility…"
-          className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none"
-          style={{background:"var(--bg)",border:"1px solid var(--border)",color:"var(--text)"}}/>
-      </div>
+      {institution.trim()&&<div className="mt-4 text-sm font-semibold" style={{color:"var(--rose)"}}>Institution named: {institution.trim()}</div>}
     </div>
     <div className="mt-8 grid grid-cols-3 gap-3">
       <MetricCard label="Reports"      value={fmt(agg.currentScore,0)} tone="var(--orange)"/>
@@ -1167,6 +1170,7 @@ function App(){
   const[scores,setScores]=useState(Object.fromEntries(DOMAINS.map(d=>[d.id,{H:undefined,W:undefined}])));
   const[deepScanMeta,setDeepScanMeta]=useState(null);
   const[completed,setCompleted]=useState(false);
+  const[institution,setInstitution]=useState("");
   const setScore=useCallback((id,val)=>setScores(p=>({...p,[id]:val})),[]);
   const applyDeepScan=useCallback(json=>{
     const next={};
@@ -1182,13 +1186,13 @@ function App(){
     <NavRail stage={stage} setStage={setStage} unlocked={unlocked} rows={rows}/>
     <div style={{flex:1,overflowY:"auto"}} id="main-scroll-outer">
       <div id="main-scroll" style={{padding:"clamp(16px,4vw,32px) clamp(16px,4vw,32px) 80px"}}>
-        {stage==="story"     &&<StoryStage onStart={()=>setStage("assess")}/>}
+        {stage==="story"     &&<StoryStage onStart={()=>setStage("assess")} institution={institution} setInstitution={setInstitution}/>}
         {stage==="assess"    &&<AssessStage scores={scores} setScore={setScore} applyDeepScan={applyDeepScan} onComplete={()=>{setCompleted(true);setStage("results");}}/>}
         {stage==="results"   &&<ResultsStage rows={rows} agg={agg} deepScanMeta={deepScanMeta}/>}
         {stage==="scenario"  &&<ScenarioStage baseScores={safeScores} rows={rows}/>}
         {stage==="signature" &&<SignatureStage rows={rows}/>}
         {stage==="redteam"   &&<RedTeamStage rows={rows} deepScanMeta={deepScanMeta} agg={agg}/>}
-        {stage==="challenge" &&<ChallengeStage rows={rows} agg={agg}/>}
+        {stage==="challenge" &&<ChallengeStage rows={rows} agg={agg} institution={institution}/>}
       </div>
     </div>
     </div>
