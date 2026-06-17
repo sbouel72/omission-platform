@@ -140,7 +140,9 @@ const H_OPTIONS=[
 ];
 const W_OPTIONS=[
   {value:1.00,label:"Actively measured and reported",    example:"Tracked, audited, and reviewed — affected groups represented."},
+  {value:0.75,label:"Measured but not audited",          example:"Data collected and reported but not independently verified or reviewed."},
   {value:0.50,label:"Acknowledged, but not measured",    example:"Named in policy but without data collection or tracking."},
+  {value:0.25,label:"Mentioned in passing",              example:"Appears in documentation or reports but receives no dedicated follow-up."},
   {value:0.10,label:"Mentioned only incidentally",       example:"Brief reference in documentation — no dedicated follow-up."},
   {value:0.01,label:"Not considered at all",             example:"Completely outside the governance scope and terminology."},
 ];
@@ -345,14 +347,16 @@ function NavRail({stage,setStage,unlocked,rows}){
     <nav className="flex-1 p-2 space-y-0.5 overflow-y-auto">
       {STAGES.map(s=>{
         const locked=!unlocked.includes(s.id),active=stage===s.id,Icon=s.icon;
-        return(<button key={s.id} disabled={locked} onClick={()=>!locked&&setStage(s.id)} style={{
-          width:"100%",display:"flex",alignItems:"center",gap:8,padding:"7px 12px",borderRadius:8,
-          border:"1px solid transparent",textAlign:"left",fontSize:12,cursor:locked?"not-allowed":"pointer",
-          background:active?"rgba(212,121,44,.12)":"transparent",
-          borderColor:active?"rgba(212,121,44,.3)":"transparent",
-          color:active?"var(--orange)":locked?"var(--border)":"var(--muted)",
-          transition:".15s"
-        }}><Icon size={13} style={{flexShrink:0}}/><span>{s.label}</span></button>);
+        return(<Tip key={s.id} content={locked?"Complete the assessment to unlock":s.label}>
+          <button disabled={locked} onClick={()=>!locked&&setStage(s.id)} style={{
+            width:"100%",display:"flex",alignItems:"center",gap:8,padding:"7px 12px",borderRadius:8,
+            border:"1px solid transparent",textAlign:"left",fontSize:12,cursor:locked?"not-allowed":"pointer",
+            background:active?"rgba(212,121,44,.12)":"transparent",
+            borderColor:active?"rgba(212,121,44,.3)":"transparent",
+            color:active?"var(--orange)":locked?"var(--border)":"var(--muted)",
+            transition:".15s"
+          }}><Icon size={13} style={{flexShrink:0}}/><span>{s.label}</span>{locked&&<span className="ml-auto text-[9px]" style={{color:"var(--border)"}}>🔒</span>}</button>
+        </Tip>);
       })}
     </nav>
     <div style={{borderTop:"1px solid var(--border)",padding:4,height:144}}><Fp8 rows={rows}/></div>
@@ -418,6 +422,10 @@ function StoryStage({onStart}){
     <div className="mt-10 p-4 rounded-xl text-sm flex gap-3" style={{background:"rgba(212,121,44,.08)",border:"1px solid rgba(212,121,44,.2)",color:"var(--text)"}}>
       <Info size={16} style={{color:"var(--orange)",flexShrink:0,marginTop:1}}/>
       <div>Every score shows its own uncertainty rating. Where evidence is incomplete, the platform says so — rather than silently filling the gap with a default.</div>
+    </div>
+    <div className="mt-4 p-4 rounded-xl text-sm flex gap-3" style={{background:"rgba(224,90,90,.07)",border:"1px solid rgba(224,90,90,.25)",color:"var(--text)"}}>
+      <AlertTriangle size={16} style={{color:"var(--rose)",flexShrink:0,marginTop:1}}/>
+      <div><strong style={{color:"var(--rose)"}}>Important: this score works backwards.</strong> A high score means the governance framework is successfully hiding its harm exposure. A low score means it can no longer do so. <strong style={{color:"var(--text)"}}>100/100 is the worst possible outcome for the people the system governs.</strong></div>
     </div>
     <div className="mt-8">
       <button className="o-btn" onClick={onStart} style={{fontSize:15,padding:"12px 28px"}}>
@@ -835,6 +843,7 @@ function ResultsStage({rows,agg,deepScanMeta}){
           {rows.map(r=><TreeNode key={r.id} label={`${r.name} — H`} value={fmt(r.H,2)} depth={2} tone={r.H>0.6?"var(--rose)":r.H>0.3?"var(--amber)":"var(--text)"}/>)}
         </TreeNode>
         <TreeNode label="Omission Risk Index — H × −log₂(W)" value={fmt(agg.omissionRiskIndex,1)} suffix="%" depth={1} tone="var(--rose)">
+          <div className="text-xs px-4 py-2 mb-1 rounded" style={{marginLeft:16,background:"rgba(224,90,90,.07)",color:"var(--muted)"}}>ORI above 1.5 = domain is both harmful and structurally invisible. Above 3.0 = effectively erased from governance.</div>
           {rows.map(r=><TreeNode key={r.id} label={`${r.name}`} value={fmt(r.A,2)} depth={2} tone={r.A>1.5?"var(--rose)":r.A>0.5?"var(--amber)":"var(--text)"}/>)}
         </TreeNode>
       </TreeNode>
@@ -868,6 +877,10 @@ function ScenarioStage({baseScores,rows}){
     <div className="o-tag">Scenario Simulation</div>
     <h2 className="text-2xl font-bold mb-2" style={{color:"var(--text)"}}>What if visibility changes?</h2>
     <p className="text-sm mb-6" style={{color:"var(--muted)"}}>Drag the W slider for any domain to simulate governance reform. Harm (H) stays fixed — this models what you <em>see</em>, not what you've fixed.</p>
+    <div className="rounded-lg p-3 mb-6 text-sm flex gap-2" style={{background:"rgba(167,139,250,.07)",border:"1px solid rgba(167,139,250,.2)",color:"var(--muted)"}}>
+      <Info size={13} style={{color:"#A78BFA",flexShrink:0,marginTop:2}}/>
+      <div>When you increase visibility, hidden harm enters the denominator — <strong style={{color:"var(--text)"}}>the score drops because more is being counted, not because things got worse.</strong> A falling score here is the platform working correctly.</div>
+    </div>
     <div className="flex gap-2 flex-wrap mb-6" style={{maxWidth:"100%"}}>
       <button className="o-btn-ghost" style={{padding:"6px 14px",fontSize:12}} onClick={()=>setOverrides({})}>Reset to assessment</button>
       <button className="o-btn-ghost" style={{padding:"6px 14px",fontSize:12}} onClick={()=>{const o={};DOMAINS.forEach(d=>{o[d.id]={W:1.0};});setOverrides(o);}}>Make all domains mandatory</button>
@@ -901,7 +914,12 @@ function ScenarioStage({baseScores,rows}){
 /* ── SIGNATURE ──────────────────────────────────────────────── */
 function SignatureStage({rows}){
   const userW=Object.fromEntries(rows.map(r=>[r.id,r.W]));
-  const sims=REFERENCE_SIGNATURES.map(ref=>({...ref,similarity:cosineSim(userW,ref.w)})).sort((a,b)=>b.similarity-a.similarity);
+  const userH=Object.fromEntries(rows.map(r=>[r.id,r.H]));
+  // Similarity on W profile (visibility shape) and note H separately
+  const sims=REFERENCE_SIGNATURES.map(ref=>{
+    const wSim=cosineSim(userW,ref.w);
+    return{...ref,similarity:wSim};
+  }).sort((a,b)=>b.similarity-a.similarity);
   const best=sims[0];
   const radarData=DOMAINS.map(d=>({subject:d.short,yours:Math.round(userW[d.id]*100),[best.id]:Math.round(best.w[d.id]*100),...(sims[1]?{[sims[1].id]:Math.round(sims[1].w[d.id]*100)}:{})}));
   const radarKeys=[
@@ -918,7 +936,10 @@ function SignatureStage({rows}){
         <div className="text-xs uppercase tracking-widest mb-1" style={{color:"var(--muted)"}}>Closest match</div>
         <div className="text-xl font-bold" style={{color:"var(--orange)"}}>{best.name}</div>
         <div className="text-sm mt-1" style={{color:"var(--muted)"}}>{best.note}</div>
-        <div className="font-mono text-xs mt-2" style={{color:"var(--muted2)"}}>cosine similarity: {fmt(best.similarity*100,1)}%</div>
+        <div className="font-mono text-xs mt-2" style={{color:"var(--muted2)"}}>visibility pattern match: {fmt(best.similarity*100,1)}%</div>
+        {rows.filter(r=>r.H>0.5&&r.W<0.3).length>0&&<div className="mt-2 text-xs p-2 rounded" style={{background:"rgba(224,90,90,.08)",color:"var(--rose)"}}>
+          Note: {rows.filter(r=>r.H>0.5&&r.W<0.3).map(r=>r.name).join(", ")} {rows.filter(r=>r.H>0.5&&r.W<0.3).length===1?"has":"have"} high harm potential but low visibility — this pattern match is on visibility shape only, not harm severity.
+        </div>}
       </div>
     </div>
     <div style={{height:300}} className="mb-8"><SvgRadar data={radarData} keys={radarKeys} showLegend vw={700} vh={300}/></div>
@@ -928,7 +949,9 @@ function SignatureStage({rows}){
         return(<div key={ref.id} className="rounded-lg p-3" style={{border:`1px solid ${i===0?"rgba(212,121,44,.3)":"var(--border)"}`,background:"var(--card)"}}>
           <div className="flex items-center justify-between">
             <div className="text-sm font-semibold" style={{color:"var(--text)"}}>{ref.name}</div>
-            <div className="font-mono text-xs" style={{color:c}}>{fmt(ref.similarity*100,1)}%</div>
+            <Tip content="How closely your visibility profile matches this model across all 8 domains. 100% = identical shape.">
+              <div className="font-mono text-xs flex items-center gap-1" style={{color:c}}>{fmt(ref.similarity*100,1)}% match <HelpCircle size={10} style={{color:"var(--muted2)"}}/></div>
+            </Tip>
           </div>
           <div className="text-xs mt-0.5 mb-2" style={{color:"var(--muted)"}}>{ref.note}</div>
           <div className="h-1.5 w-full rounded-full overflow-hidden" style={{background:"var(--border)"}}>
@@ -941,19 +964,24 @@ function SignatureStage({rows}){
 }
 
 /* ── RED TEAM ───────────────────────────────────────────────── */
-function RedTeamStage({rows,deepScanMeta}){
+function RedTeamStage({rows,deepScanMeta,agg}){
   const highRisk=rows.filter(r=>r.H>0.5&&r.W<0.3);
   const nearInvis=rows.filter(r=>r.W<0.15);
   const topOmission=[...rows].sort((a,b)=>b.A-a.A).slice(0,3);
   const bsc=rows.filter(r=>r.W<0.3).length;
-  const verdict=bsc>=4?"Your framework has systemic visibility gaps — more than half of domains are under-visible. This is a structural condition, not an oversight.":bsc>=2?"Significant blind spots exist. A targeted reform programme is recommended.":"Coverage is reasonable. Continue monitoring edge cases and newly emerging domains.";
+  const delta=agg.riskDelta;
+  const verdict=
+    (bsc>=4||delta>=40)?"Your framework has systemic visibility gaps. "+(delta>=40?`The Risk Delta of ${fmt(delta,0)} is in the critical range — your self-reported score conceals more than it reveals. This is a structural condition, not an oversight.`:"More than half of domains are under-visible.")
+    :(bsc>=2||delta>=25)?"Significant blind spots exist. "+(delta>=25?`A Risk Delta of ${fmt(delta,0)} means substantial harm is invisible to your framework. A targeted reform programme is recommended.`:"A targeted reform programme is recommended.")
+    :delta>=10?`Coverage is partial. A Risk Delta of ${fmt(delta,0)} indicates meaningful harm that your framework does not yet see. Monitor and address the lowest-visibility domains.`
+    :"Coverage is reasonable across all domains. Continue monitoring edge cases and newly emerging domains.";
   const findings=[
     {color:"var(--rose)",icon:EyeOff,title:"Invisible high-harm domains",
      body:highRisk.length>0?`${highRisk.map(r=>r.name).join(", ")} carry significant harm potential (H > 0.5) and are not being measured (W < 0.3). These are the platform's primary concern.`:"No domains with simultaneously high harm and low visibility. Good coverage in critical areas."},
     {color:"var(--amber)",icon:AlertTriangle,title:"Near-invisible domains",
      body:nearInvis.length>0?`${nearInvis.map(r=>r.name).join(", ")} are at or near the visibility floor (W < 0.15) and are effectively absent from your governance framework's perception.`:"No domains at the visibility floor. Every domain has at least nominal acknowledgement."},
     {color:"#A78BFA",icon:Target,title:"Highest omission risk — H × −log₂(W)",
-     body:`Domains with the greatest structural omission risk: ${topOmission.map(r=>`${r.name} (ORI: ${fmt(r.A,2)})`).join(", ")}. These combine meaningful harm potential with low measurement — the formula's core concern.`},
+     body:`Domains with the greatest structural omission risk: ${topOmission.map(r=>`${r.name} (ORI: ${fmt(r.A,2)})`).join(", ")}. ORI above 1.5 means a domain is both harmful and structurally invisible; above 3.0 means it is effectively erased from governance. These combine meaningful harm potential with low measurement — the formula's core concern.`},
     ...(deepScanMeta?.redFlags?.length>0?[{color:"var(--orange)",icon:Bot,title:"AI-identified red flags",body:deepScanMeta.redFlags.join(" · ")}]:[]),
   ];
   return(<div style={{maxWidth:640}}>
@@ -981,6 +1009,7 @@ function RedTeamStage({rows,deepScanMeta}){
 function ChallengeStage({rows,agg}){
   const visible=rows.filter(r=>r.W>=0.5),estimated=rows.filter(r=>r.W<0.5&&r.H>0),omitted=rows.filter(r=>r.W<0.1);
   const[copied,setCopied]=useState(false);
+  const[institution,setInstitution]=useState("");
   const exportTxt=()=>{
     const rubricExp=getRubric(agg.currentScore,agg.riskDelta);
     const scoreInversion=agg.currentScore>=80?"THE SYSTEM IS SUCCEEDING AT HIDING ITS HARM EXPOSURE":agg.currentScore>=40?"THE SYSTEM IS UNDER PRESSURE — SOME HARM IS VISIBLE":"THE SYSTEM CAN NO LONGER HIDE ITS HARM EXPOSURE";
@@ -995,6 +1024,7 @@ function ChallengeStage({rows,agg}){
       return`  ${status}${r.name.padEnd(28)} W:${String(wPct).padStart(3)}%  H:${String(hPct).padStart(3)}%  ORI:${fmt(r.A,2)}\n             Visibility  ${bar(r.W)} ${wPct}%\n             Harm        ${bar(r.H)} ${hPct}%`;
     }).join("\n\n");
     const deltaBar=Math.min(agg.riskDelta,100);
+    const institutionLine=institution.trim()?`  Framework:     ${institution.trim()}\n`:"";
     const txt=
 `╔══════════════════════════════════════════════════════════════╗
 ║          O M I S S I O N   P L A T F O R M                  ║
@@ -1002,7 +1032,7 @@ function ChallengeStage({rows,agg}){
 ╚══════════════════════════════════════════════════════════════╝
 
   Generated: ${new Date().toLocaleString()}
-
+${institutionLine}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   SCORE SUMMARY
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1054,6 +1084,8 @@ function ChallengeStage({rows,agg}){
   W = Visibility weight (1.0 = fully measured, 0.01 = absent)
   H = Harm potential   (1.0 = catastrophic,   0.0 = none)
   ORI = Omission Risk Index = H × −log₂(W)
+        ORI > 1.5 = harmful and structurally invisible
+        ORI > 3.0 = effectively erased from governance
 
 ${domainLines}
 
@@ -1081,7 +1113,8 @@ ${domainLines}
   Generated by OMISSION Governance Observability Platform
   https://github.com/sbouel72/omission-platform
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
-    const a=Object.assign(document.createElement("a"),{href:URL.createObjectURL(new Blob([txt],{type:"text/plain"})),download:`omission_report_${new Date().toISOString().slice(0,10)}.txt`});a.click();
+    const slug=institution.trim()?`_${institution.trim().toLowerCase().replace(/[^a-z0-9]+/g,"_").slice(0,30)}`:"";
+    const a=Object.assign(document.createElement("a"),{href:URL.createObjectURL(new Blob([txt],{type:"text/plain"})),download:`omission_report_${new Date().toISOString().slice(0,10)}${slug}.txt`});a.click();
   };
   const rubric=getRubric(agg.currentScore,agg.riskDelta);
   return(<div style={{maxWidth:680}}>
@@ -1106,6 +1139,12 @@ ${domainLines}
       <p className="font-bold text-lg leading-snug" style={{color:"var(--text)",marginBottom:12}}>Publish the detection probability for every domain you govern.</p>
       <p className="font-bold text-lg leading-snug" style={{color:"var(--text)"}}>Recompute your ethics score with the omitted rights returned to the denominator.</p>
       <p className="mt-4 text-sm" style={{color:"var(--muted)"}}>If the score holds, say so publicly. If it drops, the gap that appears is the omission — and it now has a name.</p>
+      <div className="mt-5">
+        <div className="text-xs font-semibold mb-1" style={{color:"var(--muted)"}}>Name the institution you are challenging (optional — appears in exported report)</div>
+        <input value={institution} onChange={e=>setInstitution(e.target.value)} placeholder="e.g. Queensland Department of Child Safety, UNCRC, HumanAbility…"
+          className="w-full rounded-lg px-3 py-2 text-sm focus:outline-none"
+          style={{background:"var(--bg)",border:"1px solid var(--border)",color:"var(--text)"}}/>
+      </div>
     </div>
     <div className="mt-8 grid grid-cols-3 gap-3">
       <MetricCard label="Reports"      value={fmt(agg.currentScore,0)} tone="var(--orange)"/>
@@ -1148,7 +1187,7 @@ function App(){
         {stage==="results"   &&<ResultsStage rows={rows} agg={agg} deepScanMeta={deepScanMeta}/>}
         {stage==="scenario"  &&<ScenarioStage baseScores={safeScores} rows={rows}/>}
         {stage==="signature" &&<SignatureStage rows={rows}/>}
-        {stage==="redteam"   &&<RedTeamStage rows={rows} deepScanMeta={deepScanMeta}/>}
+        {stage==="redteam"   &&<RedTeamStage rows={rows} deepScanMeta={deepScanMeta} agg={agg}/>}
         {stage==="challenge" &&<ChallengeStage rows={rows} agg={agg}/>}
       </div>
     </div>
