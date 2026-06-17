@@ -514,7 +514,6 @@ function parseApiError(raw,provider){
   if(raw==="CORS")return{msg:"Network blocked",detail:provider.hints?.CORS||"This browser can't reach the API directly from a file:// URL.\n\nFix: serve via a local server:\n  python3 -m http.server 8080\nThen open: http://localhost:8080/omission-platform.html"};
   const m=raw.match(/^HTTP_(\d+):(.*)$/);
   if(m){const[,code,msg]=m,hint=provider.hints?.[code]||"";return{msg:`${code} — ${msg.trim()}`,detail:hint};}
-  if(raw.startsWith("JSON_DEBUG:"))return{msg:"Bad AI response — raw output below",detail:raw.slice(11)};
   if(raw.includes("JSON"))return{msg:"Bad AI response — couldn't parse JSON",detail:"The model returned something unexpected. Try a different model or add more context to your documents."};
   return{msg:raw,detail:""};
 }
@@ -598,7 +597,7 @@ function DeepScanPanel({onResult,onSkip}){
       // Extract JSON robustly — strip fences, find first { to last }
       const stripped=txt.replace(/```json|```/g,"").trim();
       const jsonStart=stripped.indexOf("{"),jsonEnd=stripped.lastIndexOf("}");
-      if(jsonStart===-1||jsonEnd===-1)throw new Error(`JSON_DEBUG:${txt.slice(0,500)}`);
+      if(jsonStart===-1||jsonEnd===-1)throw new Error("JSON");
       const json=JSON.parse(stripped.slice(jsonStart,jsonEnd+1));
       setStatus("done");onResult(json);
     }catch(e){setError(parseApiError(e.message,provider));setStatus("error");}
