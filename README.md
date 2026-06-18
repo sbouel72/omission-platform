@@ -4,6 +4,8 @@
 
 **Live demo → [Run it now](https://sbouel72.github.io/omission-platform/omission-platform.html)**
 
+**World Report → [31 frameworks ranked by risk delta](https://sbouel72.github.io/omission-platform/world-report.html)** · World current score 51.7 · World risk delta −33.1
+
 **Sample report → [UNCRC 1989 — scored 62/100, Delta +36](https://raw.githubusercontent.com/sbouel72/omission-platform/main/UNCRC-omission-report.txt)**
 
 > The Signature stage — including the UNCRC 1989 reference score — unlocks after you complete an assessment. Run the quiz or upload a document to reach it.
