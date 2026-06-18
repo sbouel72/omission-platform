@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMISSION — World Report 2026</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f0f;--bg2:#161616;--bg3:#1d1d1d;--bg4:#252525;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#e0ddd8;--muted:#7a7874;--dim:#444440;
+  --accent:#d4824a;--accent2:#b8602a;
+  --critical:#e05252;--high:#e8a840;--moderate:#5a9fd4;--low:#6ab87a;
+  --font:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  --mono:'JetBrains Mono','Fira Mono','Courier New',monospace;
+}
+html{background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body{max-width:1100px;margin:0 auto;padding:0 1rem 5rem}
+
+/* NAV */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 0;border-bottom:1px solid var(--border);margin-bottom:0}
+.nav-logo{font-size:1.1rem;font-weight:700;letter-spacing:-.01em;color:var(--text)}
+.nav-logo span{color:var(--accent)}
+.nav-sub{font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.nav-link{font-size:12px;color:var(--muted);text-decoration:none;border:1px solid var(--border2);padding:.3rem .75rem;border-radius:2px}
+.nav-link:hover{color:var(--accent);border-color:var(--accent)}
+
+/* HERO */
+.hero{padding:3rem 0 2rem;border-bottom:1px solid var(--border)}
+.hero-eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem;font-weight:500}
+.hero-title{font-size:clamp(2rem,6vw,3.5rem);font-weight:200;letter-spacing:-.03em;line-height:1;color:var(--text);margin-bottom:.75rem}
+.hero-title strong{font-weight:700}
+.hero-desc{font-size:14px;color:var(--muted);max-width:520px;line-height:1.7;margin-bottom:2rem}
+.hero-scores{display:flex;gap:2.5rem;flex-wrap:wrap}
+.hs{border-left:2px solid var(--border2);padding-left:1rem}
+.hs-val{font-size:2.4rem;font-weight:200;letter-spacing:-.03em;line-height:1}
+.hs-val.c{color:var(--critical)}
+.hs-val.h{color:var(--high)}
+.hs-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-top:3px}
+
+/* SECTION */
+.section{padding:2.5rem 0;border-bottom:1px solid var(--border)}
+.section:last-child{border-bottom:none}
+.s-head{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--dim);margin-bottom:1.5rem;display:flex;align-items:center;gap:.75rem}
+.s-head::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* STAT STRIP */
+.stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-bottom:2rem}
+.ss-cell{background:var(--bg2);padding:1.25rem 1rem}
+.ss-val{font-size:1.9rem;font-weight:200;letter-spacing:-.02em;line-height:1;margin-bottom:4px}
+.ss-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+.ss-sub{font-size:11px;color:var(--dim);margin-top:2px}
+@media(max-width:600px){.stat-strip{grid-template-columns:repeat(2,1fr)}}
+
+/* DOMAIN GRID */
+.domain-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden}
+.dc{background:var(--bg2);padding:1.1rem 1rem .9rem;position:relative;overflow:hidden}
+.dc::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px}
+.dc-rank{font-size:10px;color:var(--dim);font-family:var(--mono);margin-bottom:.25rem}
+.dc-name{font-size:12px;color:var(--muted);margin-bottom:.5rem;line-height:1.3}
+.dc-ori{font-size:1.5rem;font-weight:200;letter-spacing:-.02em;line-height:1}
+.dc-bar{height:1px;background:var(--bg4);margin-top:.6rem;overflow:hidden}
+.dc-fill{height:100%}
+@media(max-width:600px){.domain-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* STATUS GRID */
+.status-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden}
+.sg-cell{background:var(--bg2);padding:1.1rem 1rem}
+.sg-val{font-size:1.6rem;font-weight:200;letter-spacing:-.02em;margin-bottom:3px}
+.sg-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+.sg-sub{font-size:11px;color:var(--dim);margin-top:3px}
+@media(max-width:500px){.status-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* JURISDICTION */
+.juris-wrap{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start}
+@media(max-width:700px){.juris-wrap{grid-template-columns:1fr}}
+.juris-table{width:100%;border-collapse:collapse}
+.juris-table th{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:500;padding:.4rem .6rem;border-bottom:1px solid var(--border2);text-align:left}
+.juris-table td{padding:.6rem .6rem;border-bottom:1px solid var(--border);font-size:12px;vertical-align:middle}
+.juris-table tr:last-child td{border-bottom:none}
+.juris-table tr:hover td{background:var(--bg3)}
+.j-name{font-weight:500;color:var(--text);max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.j-n{color:var(--dim);font-family:var(--mono);font-size:11px}
+.j-delta{font-family:var(--mono);font-weight:600}
+.j-bar{height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;width:60px}
+.j-bar-f{height:100%;border-radius:2px}
+.badge{display:inline-block;font-size:9px;padding:2px 6px;border-radius:2px;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.bc{background:rgba(224,82,82,.12);color:var(--critical);border:1px solid rgba(224,82,82,.2)}
+.bh{background:rgba(232,168,64,.12);color:var(--high);border:1px solid rgba(232,168,64,.2)}
+.bm{background:rgba(90,159,212,.12);color:var(--moderate);border:1px solid rgba(90,159,212,.2)}
+.bl{background:rgba(106,184,122,.12);color:var(--low);border:1px solid rgba(106,184,122,.2)}
+.chart-wrap{position:relative;width:100%}
+
+/* FRAMEWORK SECTION */
+.fw-filters{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem;align-items:center}
+.fw-filters select,.fw-filters input{background:var(--bg2);border:1px solid var(--border2);color:var(--text);padding:.35rem .65rem;border-radius:2px;font-size:12px;font-family:var(--font);outline:none}
+.fw-filters select:focus,.fw-filters input:focus{border-color:var(--accent)}
+.fw-filters input{width:180px}
+.fw-count{font-size:11px;color:var(--dim);margin-left:auto}
+
+.fw-list{border:1px solid var(--border);border-radius:3px;overflow:hidden}
+.fw-item{border-bottom:1px solid var(--border);background:var(--bg2)}
+.fw-item:last-child{border-bottom:none}
+.fw-header{display:grid;grid-template-columns:2rem 1fr auto auto auto;gap:.75rem;align-items:center;padding:.85rem 1rem;cursor:pointer;transition:background .12s}
+.fw-header:hover{background:var(--bg3)}
+.fw-item.open .fw-header{background:var(--bg3)}
+.fw-num{font-family:var(--mono);font-size:11px;color:var(--dim);text-align:center}
+.fw-info .fw-name{font-size:13px;font-weight:500;color:var(--text);line-height:1.3}
+.fw-info .fw-meta{font-size:11px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fw-delta{font-family:var(--mono);font-size:15px;font-weight:700;min-width:48px;text-align:right}
+.fw-badge-col{min-width:72px;text-align:right}
+.fw-chevron{color:var(--dim);font-size:16px;transition:transform .2s;line-height:1}
+.fw-item.open .fw-chevron{transform:rotate(180deg)}
+
+.fw-body{display:none;border-top:1px solid var(--border);background:var(--bg3)}
+.fw-item.open .fw-body{display:block}
+.fw-body-inner{display:grid;grid-template-columns:1fr 280px;gap:1.5rem;padding:1.25rem 1rem}
+@media(max-width:650px){.fw-body-inner{grid-template-columns:1fr}}
+
+.fw-summary{font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:.75rem}
+.fw-verdict{font-size:11px;color:var(--dim);font-style:italic;margin-bottom:1rem;padding-left:.6rem;border-left:2px solid var(--accent2)}
+.fw-sector-tag{font-size:10px;color:var(--dim);margin-bottom:1rem}
+.fw-sector-tag span{color:var(--muted)}
+
+/* DOMAIN ROWS inside card */
+.dr-list{display:flex;flex-direction:column;gap:5px}
+.dr-row{display:grid;grid-template-columns:130px 1fr 36px 36px 70px;gap:6px;align-items:center;font-size:11px}
+.dr-name{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dr-bars{position:relative;height:5px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.dr-h{position:absolute;top:0;left:0;height:100%;border-radius:2px}
+.dr-w{position:absolute;top:0;left:0;height:100%;border-radius:2px}
+.dr-pct{font-family:var(--mono);font-size:10px;text-align:right;color:var(--dim)}
+.dr-status{text-align:right;font-size:9px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.st-o{color:var(--critical)}.st-b{color:var(--high)}.st-e{color:var(--moderate)}.st-v{color:var(--low)}
+
+/* RADAR */
+.radar-wrap{display:flex;flex-direction:column;align-items:center;gap:.5rem}
+.radar-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.09em;color:var(--dim);text-align:center}
+.radar-legend{display:flex;gap:1rem;font-size:10px;color:var(--dim);flex-wrap:wrap;justify-content:center}
+
+/* SCORES INSIDE CARD */
+.card-scores{display:flex;gap:1.5rem;margin-bottom:1rem}
+.cs{text-align:center}
+.cs-val{font-size:1.3rem;font-weight:200;letter-spacing:-.02em}
+.cs-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+
+/* FOOTER */
+.footer{padding:2rem 0 1rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--dim);flex-wrap:wrap;gap:1rem}
+.footer-logo{font-size:14px;font-weight:700;color:var(--text)}
+.footer-logo span{color:var(--accent)}
+
+/* FINDING PILLS (domain highlights inside card) */
+.finding{background:var(--bg);border-left:2px solid var(--critical);padding:.5rem .75rem;margin-bottom:.5rem;border-radius:0 2px 2px 0}
+.finding.warn{border-left-color:var(--high)}
+.finding.mod{border-left-color:var(--moderate)}
+.finding-title{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--critical);margin-bottom:2px}
+.finding.warn .finding-title{color:var(--high)}
+.finding.mod .finding-title{color:var(--moderate)}
+.finding-body{font-size:11px;color:var(--muted);line-height:1.5}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div>
+    <div class="nav-logo"><span>Omission</span></div>
+    <div class="nav-sub">Governance Observability Platform</div>
+  </div>
+  <a class="nav-link" href="https://sbouel72.github.io/omission-platform/omission-platform.html" target="_blank">Run Assessment ↗</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">World Report · June 2026</div>
+  <div class="hero-title"><strong>OMISSION</strong><br>World Score</div>
+  <div class="hero-desc">31 frameworks assessed across 16 jurisdictions and 8 governance domains. Measuring the gap between what decision-makers see and what policies actually cover.</div>
+  <div class="hero-scores">
+    <div class="hs">
+      <div class="hs-val c">51.7</div>
+      <div class="hs-lbl">World current score</div>
+    </div>
+    <div class="hs">
+      <div class="hs-val h">84.8</div>
+      <div class="hs-lbl">World true score</div>
+    </div>
+    <div class="hs">
+      <div class="hs-val c">−33.1</div>
+      <div class="hs-lbl">World risk delta</div>
+    </div>
+  </div>
+</div>
+
+<!-- OVERVIEW -->
+<div class="section">
+  <div class="s-head">Overview</div>
+  <div class="stat-strip">
+    <div class="ss-cell">
+      <div class="ss-val" style="color:var(--critical)">51.7</div>
+      <div class="ss-lbl">Current score</div>
+      <div class="ss-sub">Perceived governance health</div>
+    </div>
+    <div class="ss-cell">
+      <div class="ss-val" style="color:var(--high)">84.8</div>
+      <div class="ss-lbl">True score</div>
+      <div class="ss-sub">Actual harm potential</div>
+    </div>
+    <div class="ss-cell">
+      <div class="ss-val" style="color:var(--critical)">−33.1</div>
+      <div class="ss-lbl">Risk delta</div>
+      <div class="ss-sub">Structurally hidden</div>
+    </div>
+    <div class="ss-cell">
+      <div class="ss-val">31</div>
+      <div class="ss-lbl">Frameworks</div>
+      <div class="ss-sub">Valid policy documents</div>
+    </div>
+  </div>
+  <div class="stat-strip">
+    <div class="ss-cell">
+      <div class="ss-val" style="color:var(--critical)">8</div>
+      <div class="ss-lbl">Critical</div>
+      <div class="ss-sub">Immediate reform required</div>
+    </div>
+    <div class="ss-cell">
+      <div class="ss-val" style="color:var(--high)">5</div>
+      <div class="ss-lbl">High</div>
+      <div class="ss-sub">Significant blind spots</div>
+    </div>
+    <div class="ss-cell">
+      <div class="ss-val" style="color:var(--moderate)">13</div>
+      <div class="ss-lbl">Moderate</div>
+      <div class="ss-sub">Targeted improvements</div>
+    </div>
+    <div class="ss-cell">
+      <div class="ss-val" style="color:var(--low)">5</div>
+      <div class="ss-lbl">Low</div>
+      <div class="ss-sub">Performing adequately</div>
+    </div>
+  </div>
+</div>
+
+<!-- DOMAIN ORI -->
+<div class="section">
+  <div class="s-head">Domain Omission Risk Index</div>
+  <div class="domain-grid" id="domain-grid"></div>
+</div>
+
+<!-- STATUS -->
+<div class="section">
+  <div class="s-head">Coverage Status — 248 domain slots</div>
+  <div class="status-grid">
+    <div class="sg-cell">
+      <div class="sg-val" style="color:var(--low)">135</div>
+      <div class="sg-lbl">Visible</div>
+      <div class="sg-sub">W ≥ 50 · In frame</div>
+    </div>
+    <div class="sg-cell">
+      <div class="sg-val" style="color:var(--moderate)">47</div>
+      <div class="sg-lbl">Estimated</div>
+      <div class="sg-sub">W 6–49 · Partial</div>
+    </div>
+    <div class="sg-cell">
+      <div class="sg-val" style="color:var(--high)">15</div>
+      <div class="sg-lbl">Blind spot</div>
+      <div class="sg-sub">W = 5 · Barely present</div>
+    </div>
+    <div class="sg-cell">
+      <div class="sg-val" style="color:var(--critical)">51</div>
+      <div class="sg-lbl">Omitted</div>
+      <div class="sg-sub">W = 1 · Absent</div>
+    </div>
+  </div>
+</div>
+
+<!-- JURISDICTION -->
+<div class="section">
+  <div class="s-head">By Jurisdiction</div>
+  <div class="juris-wrap">
+    <table class="juris-table" id="juris-table"></table>
+    <div>
+      <div class="chart-wrap" id="chart-wrap">
+        <canvas id="jurisChart" role="img" aria-label="Jurisdiction risk delta bar chart">Average risk delta by jurisdiction.</canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FRAMEWORKS -->
+<div class="section">
+  <div class="s-head">Framework Index</div>
+  <div class="fw-filters">
+    <select id="filterRisk"><option value="">All risk levels</option><option value="Critical">Critical</option><option value="High">High</option><option value="Moderate">Moderate</option><option value="Low">Low</option></select>
+    <select id="filterCountry"><option value="">All jurisdictions</option></select>
+    <input type="text" id="searchFw" placeholder="Search…">
+    <div class="fw-count" id="fw-count">31 frameworks</div>
+  </div>
+  <div class="fw-list" id="fw-list"></div>
+</div>
+
+<div class="footer">
+  <div>
+    <div class="footer-logo"><span>Omission</span></div>
+    <div>sbouel72.github.io/omission-platform · Scored June 2026</div>
+  </div>
+  <div style="text-align:right">31 frameworks · 16 jurisdictions<br>8 governance domains</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const DATA=[{"rank":1,"framework":"Truth and Reconciliation Commission","country":"South Korea","sector":"Human Rights / Historical Justice","summary":"Website header for an independent national investigative body tasked with uncovering the truth about past historical events, including human rights abuses and civilian sacrifices.","current":1,"true":88,"delta":87,"blind_spots":"8/8","risk_level":"Critical","verdict":"Immediate structural reform required.","domains":{"Identity Continuity":{"w":1,"h":90,"ori":5.98,"status":"OMITTED"},"Family Integrity":{"w":1,"h":90,"ori":5.98,"status":"OMITTED"},"Cultural Continuity":{"w":1,"h":80,"ori":5.32,"status":"OMITTED"},"Information Rights":{"w":1,"h":100,"ori":6.64,"status":"OMITTED"},"Agency":{"w":1,"h":80,"ori":5.32,"status":"OMITTED"},"Consent":{"w":1,"h":80,"ori":5.32,"status":"OMITTED"},"Self-Determination":{"w":1,"h":80,"ori":5.32,"status":"OMITTED"},"Memory Preservation":{"w":1,"h":100,"ori":6.64,"status":"OMITTED"}}},{"rank":2,"framework":"Jeugdwet","country":"Netherlands","sector":"Child Rights","summary":"Metadata and table of contents for the Dutch Youth Act, outlining its structure and scope without detailing the full legal text.","current":5,"true":90,"delta":85,"blind_spots":"8/8","risk_level":"Critical","verdict":"Immediate structural reform required.","domains":{"Identity Continuity":{"w":5,"h":90,"ori":3.89,"status":"BLIND SP."},"Family Integrity":{"w":5,"h":90,"ori":3.89,"status":"BLIND SP."},"Cultural Continuity":{"w":5,"h":90,"ori":3.89,"status":"BLIND SP."},"Information Rights":{"w":5,"h":90,"ori":3.89,"status":"BLIND SP."},"Agency":{"w":5,"h":90,"ori":3.89,"status":"BLIND SP."},"Consent":{"w":5,"h":90,"ori":3.89,"status":"BLIND SP."},"Self-Determination":{"w":5,"h":90,"ori":3.89,"status":"BLIND SP."},"Memory Preservation":{"w":5,"h":90,"ori":3.89,"status":"BLIND SP."}}},{"rank":3,"framework":"Family Law Act 1975","country":"Australia","sector":"Family Law","summary":"Establishes the legal framework for marriage, divorce, separation, and related matters concerning children and property in Australia.","current":1,"true":85,"delta":84,"blind_spots":"8/8","risk_level":"Critical","verdict":"Immediate structural reform required.","domains":{"Identity Continuity":{"w":1,"h":90,"ori":5.98,"status":"OMITTED"},"Family Integrity":{"w":1,"h":100,"ori":6.64,"status":"OMITTED"},"Cultural Continuity":{"w":1,"h":80,"ori":5.32,"status":"OMITTED"},"Information Rights":{"w":1,"h":80,"ori":5.32,"status":"OMITTED"},"Agency":{"w":1,"h":90,"ori":5.98,"status":"OMITTED"},"Consent":{"w":1,"h":90,"ori":5.98,"status":"OMITTED"},"Self-Determination":{"w":1,"h":80,"ori":5.32,"status":"OMITTED"},"Memory Preservation":{"w":1,"h":70,"ori":4.65,"status":"OMITTED"}}},{"rank":4,"framework":"Children, Youth and Families Act 2005","country":"Victoria, Australia","sector":"Child Protection and Family Services","summary":"Governs legal frameworks for child protection, youth justice, and family support services in Victoria.","current":1,"true":82,"delta":81,"blind_spots":"8/8","risk_level":"Critical","verdict":"Immediate structural reform required.","domains":{"Identity Continuity":{"w":1,"h":90,"ori":5.98,"status":"OMITTED"},"Family Integrity":{"w":1,"h":95,"ori":6.31,"status":"OMITTED"},"Cultural Continuity":{"w":1,"h":85,"ori":5.65,"status":"OMITTED"},"Information Rights":{"w":1,"h":70,"ori":4.65,"status":"OMITTED"},"Agency":{"w":1,"h":80,"ori":5.32,"status":"OMITTED"},"Consent":{"w":1,"h":80,"ori":5.32,"status":"OMITTED"},"Self-Determination":{"w":1,"h":85,"ori":5.65,"status":"OMITTED"},"Memory Preservation":{"w":1,"h":75,"ori":4.98,"status":"OMITTED"}}},{"rank":5,"framework":"Children Act 1989","country":"United Kingdom","sector":"Child Rights/Adoption/Social Care","summary":"Reforms the law relating to children, establishing local authority services for children in need, and regulating fostering, child minding, day care, and adoption.","current":14,"true":90,"delta":76,"blind_spots":"6/8","risk_level":"Critical","verdict":"Immediate structural reform required.","domains":{"Identity Continuity":{"w":30,"h":90,"ori":1.56,"status":"ESTIMATED"},"Family Integrity":{"w":80,"h":100,"ori":0.32,"status":"VISIBLE"},"Cultural Continuity":{"w":1,"h":90,"ori":5.98,"status":"OMITTED"},"Information Rights":{"w":1,"h":90,"ori":5.98,"status":"OMITTED"},"Agency":{"w":1,"h":90,"ori":5.98,"status":"OMITTED"},"Consent":{"w":1,"h":90,"ori":5.98,"status":"OMITTED"},"Self-Determination":{"w":1,"h":80,"ori":5.32,"status":"OMITTED"},"Memory Preservation":{"w":1,"h":90,"ori":5.98,"status":"OMITTED"}}},{"rank":6,"framework":"HumanAbility Workforce Plan 2025","country":"Australia","sector":"Care and Support Services","summary":"Outlines HumanAbility's 2025 workforce plan for Australia's care and support industries, addressing challenges in skills, training, and sustainability.","current":19,"true":81,"delta":62,"blind_spots":"6/8","risk_level":"Critical","verdict":"Immediate structural reform required.","domains":{"Identity Continuity":{"w":20,"h":60,"ori":1.39,"status":"ESTIMATED"},"Family Integrity":{"w":20,"h":60,"ori":1.39,"status":"ESTIMATED"},"Cultural Continuity":{"w":50,"h":90,"ori":0.9,"status":"VISIBLE"},"Information Rights":{"w":1,"h":90,"ori":5.98,"status":"OMITTED"},"Agency":{"w":20,"h":90,"ori":2.09,"status":"ESTIMATED"},"Consent":{"w":1,"h":100,"ori":6.64,"status":"OMITTED"},"Self-Determination":{"w":40,"h":90,"ori":1.19,"status":"ESTIMATED"},"Memory Preservation":{"w":1,"h":70,"ori":4.65,"status":"OMITTED"}}},{"rank":7,"framework":"HumanAbility Workforce Plan 2024","country":"Australia","sector":"Care and Support Services","summary":"Outlines strategies to address workforce shortages and skills gaps across Australia's aged care, disability support, and health sectors.","current":13,"true":68,"delta":55,"blind_spots":"7/8","risk_level":"Critical","verdict":"Immediate structural reform required.","domains":{"Identity Continuity":{"w":5,"h":60,"ori":2.59,"status":"BLIND SP."},"Family Integrity":{"w":1,"h":60,"ori":3.99,"status":"OMITTED"},"Cultural Continuity":{"w":60,"h":70,"ori":0.52,"status":"VISIBLE"},"Information Rights":{"w":10,"h":70,"ori":2.33,"status":"ESTIMATED"},"Agency":{"w":5,"h":80,"ori":3.46,"status":"BLIND SP."},"Consent":{"w":1,"h":90,"ori":5.98,"status":"OMITTED"},"Self-Determination":{"w":20,"h":70,"ori":1.63,"status":"ESTIMATED"},"Memory Preservation":{"w":1,"h":40,"ori":2.66,"status":"OMITTED"}}},{"rank":8,"framework":"Commission to Inquire into Child Abuse","country":"Ireland","sector":"Child Rights","summary":"Irish Commission to Inquire into Child Abuse — website page with navigation, contact information, and access to critical reports.","current":36,"true":76,"delta":40,"blind_spots":"4/8","risk_level":"Critical","verdict":"Immediate structural reform required.","domains":{"Identity Continuity":{"w":30,"h":80,"ori":1.39,"status":"ESTIMATED"},"Family Integrity":{"w":20,"h":80,"ori":1.86,"status":"ESTIMATED"},"Cultural Continuity":{"w":5,"h":60,"ori":2.59,"status":"BLIND SP."},"Information Rights":{"w":90,"h":90,"ori":0.14,"status":"VISIBLE"},"Agency":{"w":40,"h":70,"ori":0.93,"status":"ESTIMATED"},"Consent":{"w":10,"h":70,"ori":2.33,"status":"ESTIMATED"},"Self-Determination":{"w":10,"h":70,"ori":2.33,"status":"ESTIMATED"},"Memory Preservation":{"w":80,"h":90,"ori":0.29,"status":"VISIBLE"}}},{"rank":9,"framework":"Children and Social Work Act 2017","country":"United Kingdom (England)","sector":"Child Rights/Looked After Children/Care Leavers","summary":"Establishes corporate parenting principles for English local authorities to promote the well-being and agency of looked-after children and care leavers.","current":51,"true":90,"delta":39,"blind_spots":"2/8","risk_level":"High","verdict":"Reform recommended — significant blind spots.","domains":{"Identity Continuity":{"w":40,"h":90,"ori":1.19,"status":"ESTIMATED"},"Family Integrity":{"w":60,"h":90,"ori":0.66,"status":"VISIBLE"},"Cultural Continuity":{"w":10,"h":90,"ori":2.99,"status":"ESTIMATED"},"Information Rights":{"w":70,"h":90,"ori":0.46,"status":"VISIBLE"},"Agency":{"w":80,"h":90,"ori":0.29,"status":"VISIBLE"},"Consent":{"w":60,"h":90,"ori":0.66,"status":"VISIBLE"},"Self-Determination":{"w":80,"h":90,"ori":0.29,"status":"VISIBLE"},"Memory Preservation":{"w":10,"h":90,"ori":2.99,"status":"ESTIMATED"}}},{"rank":10,"framework":"ICESCR","country":"International","sector":"Human Rights","summary":"Establishes the universal recognition and progressive realization of economic, social, and cultural rights, emphasizing non-discrimination and self-determination.","current":52,"true":86,"delta":34,"blind_spots":"3/8","risk_level":"High","verdict":"Reform recommended — significant blind spots.","domains":{"Identity Continuity":{"w":5,"h":80,"ori":3.46,"status":"BLIND SP."},"Family Integrity":{"w":90,"h":90,"ori":0.14,"status":"VISIBLE"},"Cultural Continuity":{"w":70,"h":90,"ori":0.46,"status":"VISIBLE"},"Information Rights":{"w":1,"h":80,"ori":5.32,"status":"OMITTED"},"Agency":{"w":85,"h":90,"ori":0.21,"status":"VISIBLE"},"Consent":{"w":60,"h":90,"ori":0.66,"status":"VISIBLE"},"Self-Determination":{"w":100,"h":100,"ori":0,"status":"VISIBLE"},"Memory Preservation":{"w":1,"h":70,"ori":4.65,"status":"OMITTED"}}},{"rank":11,"framework":"SGB 8 - Kinder- und Jugendhilfe","country":"Germany","sector":"Child Rights/Youth Welfare","summary":"Table of contents for the German Social Code Book VIII, outlining the legal framework for child and youth welfare services.","current":53,"true":84,"delta":31,"blind_spots":"3/8","risk_level":"High","verdict":"Reform recommended — significant blind spots.","domains":{"Identity Continuity":{"w":10,"h":90,"ori":2.99,"status":"ESTIMATED"},"Family Integrity":{"w":80,"h":90,"ori":0.29,"status":"VISIBLE"},"Cultural Continuity":{"w":5,"h":70,"ori":3.03,"status":"BLIND SP."},"Information Rights":{"w":60,"h":80,"ori":0.59,"status":"VISIBLE"},"Agency":{"w":90,"h":90,"ori":0.14,"status":"VISIBLE"},"Consent":{"w":70,"h":80,"ori":0.41,"status":"VISIBLE"},"Self-Determination":{"w":90,"h":90,"ori":0.14,"status":"VISIBLE"},"Memory Preservation":{"w":20,"h":80,"ori":1.86,"status":"ESTIMATED"}}},{"rank":12,"framework":"Convention on the Rights of the Child","country":"International","sector":"Child Rights","summary":"Comprehensive framework for the protection and promotion of civil, political, economic, social, and cultural rights of all children.","current":48,"true":79,"delta":31,"blind_spots":"2/8","risk_level":"High","verdict":"Reform recommended — significant blind spots.","domains":{"Identity Continuity":{"w":90,"h":90,"ori":0.14,"status":"VISIBLE"},"Family Integrity":{"w":100,"h":100,"ori":0,"status":"VISIBLE"},"Cultural Continuity":{"w":40,"h":70,"ori":0.93,"status":"ESTIMATED"},"Information Rights":{"w":30,"h":60,"ori":1.04,"status":"ESTIMATED"},"Agency":{"w":40,"h":70,"ori":0.93,"status":"ESTIMATED"},"Consent":{"w":10,"h":80,"ori":2.66,"status":"ESTIMATED"},"Self-Determination":{"w":20,"h":80,"ori":1.86,"status":"ESTIMATED"},"Memory Preservation":{"w":50,"h":80,"ori":0.8,"status":"VISIBLE"}}},{"rank":13,"framework":"Preventing Sex Trafficking and Strengthening Families Act","country":"United States of America","sector":"Child Rights/Adoption/Foster Care","summary":"Aims to prevent sex trafficking of children in foster care, improve adoption incentives, and enhance international child support recovery.","current":65,"true":90,"delta":25,"blind_spots":"2/8","risk_level":"High","verdict":"Reform recommended — significant blind spots.","domains":{"Identity Continuity":{"w":90,"h":100,"ori":0.15,"status":"VISIBLE"},"Family Integrity":{"w":80,"h":90,"ori":0.29,"status":"VISIBLE"},"Cultural Continuity":{"w":10,"h":80,"ori":2.66,"status":"ESTIMATED"},"Information Rights":{"w":90,"h":90,"ori":0.14,"status":"VISIBLE"},"Agency":{"w":70,"h":90,"ori":0.46,"status":"VISIBLE"},"Consent":{"w":20,"h":90,"ori":2.09,"status":"ESTIMATED"},"Self-Determination":{"w":70,"h":90,"ori":0.46,"status":"VISIBLE"},"Memory Preservation":{"w":90,"h":90,"ori":0.14,"status":"VISIBLE"}}},{"rank":14,"framework":"CRC General Comment No. 11 on Indigenous Children","country":"International (UN)","sector":"Child Rights/Indigenous Rights","summary":"Guidance to States on implementing CRC obligations for indigenous children, emphasizing cultural, religious, and linguistic rights.","current":54,"true":78,"delta":24,"blind_spots":"1/8","risk_level":"Moderate","verdict":"Targeted improvements recommended.","domains":{"Identity Continuity":{"w":90,"h":90,"ori":0.14,"status":"VISIBLE"},"Family Integrity":{"w":40,"h":70,"ori":0.93,"status":"ESTIMATED"},"Cultural Continuity":{"w":100,"h":100,"ori":0,"status":"VISIBLE"},"Information Rights":{"w":30,"h":40,"ori":0.69,"status":"ESTIMATED"},"Agency":{"w":50,"h":70,"ori":0.7,"status":"VISIBLE"},"Consent":{"w":1,"h":80,"ori":5.32,"status":"OMITTED"},"Self-Determination":{"w":80,"h":90,"ori":0.29,"status":"VISIBLE"},"Memory Preservation":{"w":40,"h":80,"ori":1.06,"status":"ESTIMATED"}}},{"rank":15,"framework":"Hague Intercountry Adoption Convention","country":"International","sector":"Child Rights/Adoption","summary":"Establishes safeguards and cooperation for intercountry adoptions to ensure they are in the child's best interests and prevent illicit practices.","current":66,"true":88,"delta":22,"blind_spots":"1/8","risk_level":"Moderate","verdict":"Targeted improvements recommended.","domains":{"Identity Continuity":{"w":70,"h":90,"ori":0.46,"status":"VISIBLE"},"Family Integrity":{"w":90,"h":95,"ori":0.14,"status":"VISIBLE"},"Cultural Continuity":{"w":10,"h":70,"ori":2.33,"status":"ESTIMATED"},"Information Rights":{"w":90,"h":90,"ori":0.14,"status":"VISIBLE"},"Agency":{"w":80,"h":90,"ori":0.29,"status":"VISIBLE"},"Consent":{"w":100,"h":100,"ori":0,"status":"VISIBLE"},"Self-Determination":{"w":40,"h":75,"ori":0.99,"status":"ESTIMATED"},"Memory Preservation":{"w":50,"h":90,"ori":0.9,"status":"VISIBLE"}}},{"rank":16,"framework":"ADOPTION ACT 2010","country":"Ireland","sector":"Adoption/Child Rights","summary":"Establishes the legal framework for domestic and intercountry adoptions in Ireland, outlining procedures, consent, eligibility, and adoption registers.","current":69,"true":91,"delta":22,"blind_spots":"1/8","risk_level":"Moderate","verdict":"Targeted improvements recommended.","domains":{"Identity Continuity":{"w":75,"h":100,"ori":0.42,"status":"VISIBLE"},"Family Integrity":{"w":75,"h":100,"ori":0.42,"status":"VISIBLE"},"Cultural Continuity":{"w":1,"h":75,"ori":4.98,"status":"OMITTED"},"Information Rights":{"w":75,"h":100,"ori":0.42,"status":"VISIBLE"},"Agency":{"w":75,"h":75,"ori":0.31,"status":"VISIBLE"},"Consent":{"w":100,"h":100,"ori":0,"status":"VISIBLE"},"Self-Determination":{"w":50,"h":75,"ori":0.75,"status":"VISIBLE"},"Memory Preservation":{"w":100,"h":100,"ori":0,"status":"VISIBLE"}}},{"rank":17,"framework":"Adoption and Children (Scotland) Act 2007","country":"Scotland","sector":"Adoption","summary":"Restates and amends adoption law in Scotland, establishing services and legal frameworks for adoption and permanence orders.","current":68,"true":90,"delta":22,"blind_spots":"1/8","risk_level":"Moderate","verdict":"Targeted improvements recommended.","domains":{"Identity Continuity":{"w":80,"h":90,"ori":0.29,"status":"VISIBLE"},"Family Integrity":{"w":90,"h":100,"ori":0.15,"status":"VISIBLE"},"Cultural Continuity":{"w":5,"h":80,"ori":3.46,"status":"BLIND SP."},"Information Rights":{"w":85,"h":90,"ori":0.21,"status":"VISIBLE"},"Agency":{"w":60,"h":80,"ori":0.59,"status":"VISIBLE"},"Consent":{"w":95,"h":100,"ori":0.07,"status":"VISIBLE"},"Self-Determination":{"w":50,"h":90,"ori":0.9,"status":"VISIBLE"},"Memory Preservation":{"w":80,"h":90,"ori":0.29,"status":"VISIBLE"}}},{"rank":18,"framework":"Adoption Act 2010","country":"Ireland","sector":"Adoption","summary":"Establishes the legal framework for adoptions in Ireland, including placement procedures, consent, eligibility, and adoption registers.","current":72,"true":93,"delta":21,"blind_spots":"2/8","risk_level":"Moderate","verdict":"Targeted improvements recommended.","domains":{"Identity Continuity":{"w":90,"h":100,"ori":0.15,"status":"VISIBLE"},"Family Integrity":{"w":95,"h":100,"ori":0.07,"status":"VISIBLE"},"Cultural Continuity":{"w":10,"h":80,"ori":2.66,"status":"ESTIMATED"},"Information Rights":{"w":85,"h":90,"ori":0.21,"status":"VISIBLE"},"Agency":{"w":80,"h":95,"ori":0.31,"status":"VISIBLE"},"Consent":{"w":100,"h":100,"ori":0,"status":"VISIBLE"},"Self-Determination":{"w":20,"h":80,"ori":1.86,"status":"ESTIMATED"},"Memory Preservation":{"w":95,"h":100,"ori":0.07,"status":"VISIBLE"}}},{"rank":19,"framework":"Adoption and Children Act 2002","country":"United Kingdom","sector":"Adoption","summary":"Restates adoption law in the UK, establishing the child's welfare throughout their life as the paramount consideration.","current":69,"true":90,"delta":21,"blind_spots":"0/8","risk_level":"Moderate","verdict":"Targeted improvements recommended.","domains":{"Identity Continuity":{"w":80,"h":100,"ori":0.32,"status":"VISIBLE"},"Family Integrity":{"w":90,"h":100,"ori":0.15,"status":"VISIBLE"},"Cultural Continuity":{"w":60,"h":90,"ori":0.66,"status":"VISIBLE"},"Information Rights":{"w":30,"h":90,"ori":1.56,"status":"ESTIMATED"},"Agency":{"w":80,"h":80,"ori":0.26,"status":"VISIBLE"},"Consent":{"w":70,"h":90,"ori":0.46,"status":"VISIBLE"},"Self-Determination":{"w":70,"h":80,"ori":0.41,"status":"VISIBLE"},"Memory Preservation":{"w":70,"h":90,"ori":0.46,"status":"VISIBLE"}}},{"rank":20,"framework":"Adoption Act","country":"British Columbia, Canada","sector":"Adoption/Child Rights","summary":"Legal framework for adoption in British Columbia, focusing on placement, consent, and the best interests of the child, including Indigenous children.","current":70,"true":88,"delta":18,"blind_spots":"0/8","risk_level":"Moderate","verdict":"Targeted improvements recommended.","domains":{"Identity Continuity":{"w":50,"h":90,"ori":0.9,"status":"VISIBLE"},"Family Integrity":{"w":90,"h":90,"ori":0.14,"status":"VISIBLE"},"Cultural Continuity":{"w":90,"h":95,"ori":0.14,"status":"VISIBLE"},"Information Rights":{"w":40,"h":80,"ori":1.06,"status":"ESTIMATED"},"Agency":{"w":85,"h":85,"ori":0.2,"status":"VISIBLE"},"Consent":{"w":98,"h":98,"ori":0.03,"status":"VISIBLE"},"Self-Determination":{"w":80,"h":90,"ori":0.29,"status":"VISIBLE"},"Memory Preservation":{"w":30,"h":80,"ori":1.39,"status":"ESTIMATED"}}},{"rank":21,"framework":"Child Protection Act 1999","country":"Australia","sector":"Child Rights/Adoption","summary":"Legislative framework for child protection in Queensland — identifying, assessing, and responding to harm or risk of harm to children.","current":71,"true":88,"delta":17,"blind_spots":"1/8","risk_level":"Moderate","verdict":"Targeted improvements recommended.","domains":{"Identity Continuity":{"w":70,"h":90,"ori":0.46,"status":"VISIBLE"},"Family Integrity":{"w":90,"h":100,"ori":0.15,"status":"VISIBLE"},"Cultural Continuity":{"w":90,"h":90,"ori":0.14,"status":"VISIBLE"},"Information Rights":{"w":70,"h":80,"ori":0.41,"status":"VISIBLE"},"Agency":{"w":80,"h":70,"ori":0.23,"status":"VISIBLE"},"Consent":{"w":70,"h":90,"ori":0.46,"status":"VISIBLE"},"Self-Determination":{"w":90,"h":100,"ori":0.15,"status":"VISIBLE"},"Memory Preservation":{"w":10,"h":80,"ori":2.66,"status":"ESTIMATED"}}},{"rank":22,"framework":"UN Convention on the Rights of the Child","country":"International","sector":"Child Rights","summary":"Foundational international treaty establishing comprehensive human rights for all children, emphasizing protection, development, identity, and family connections.","current":61,"true":78,"delta":17,"blind_spots":"0/8","risk_level":"Moderate","verdict":"Targeted improvements recommended.","domains":{"Identity Continuity":{"w":90,"h":90,"ori":0.14,"status":"VISIBLE"},"Family Integrity":{"w":95,"h":95,"ori":0.07,"status":"VISIBLE"},"Cultural Continuity":{"w":40,"h":70,"ori":0.93,"status":"ESTIMATED"},"Information Rights":{"w":60,"h":75,"ori":0.55,"status":"VISIBLE"},"Agency":{"w":55,"h":70,"ori":0.6,"status":"VISIBLE"},"Consent":{"w":30,"h":70,"ori":1.22,"status":"ESTIMATED"},"Self-Determination":{"w":45,"h":70,"ori":0.81,"status":"ESTIMATED"},"Memory Preservation":{"w":75,"h":85,"ori":0.35,"status":"VISIBLE"}}},{"rank":23,"framework":"National Inquiry into MMIWG Final Report Executive Summary","country":"Canada","sector":"Indigenous Rights / Human Rights / Gender-Based Violence","summary":"Frames systemic violence against Indigenous women, girls, and 2SLGBTQQIA people in Canada as race-based genocide, calling for a new human rights framework.","current":79,"true":95,"delta":16,"blind_spots":"0/8","risk_level":"Moderate","verdict":"Targeted improvements recommended.","domains":{"Identity Continuity":{"w":90,"h":100,"ori":0.15,"status":"VISIBLE"},"Family Integrity":{"w":90,"h":100,"ori":0.15,"status":"VISIBLE"},"Cultural Continuity":{"w":95,"h":100,"ori":0.07,"status":"VISIBLE"},"Information Rights":{"w":70,"h":80,"ori":0.41,"status":"VISIBLE"},"Agency":{"w":90,"h":100,"ori":0.15,"status":"VISIBLE"},"Consent":{"w":30,"h":90,"ori":1.56,"status":"ESTIMATED"},"Self-Determination":{"w":90,"h":100,"ori":0.15,"status":"VISIBLE"},"Memory Preservation":{"w":80,"h":90,"ori":0.29,"status":"VISIBLE"}}},{"rank":24,"framework":"Bill C-92: Indigenous Child and Family Services Act","country":"Canada","sector":"Indigenous Child Rights/Child and Family Services","summary":"Affirms Indigenous peoples' rights and jurisdiction over child and family services to address historical harms and over-representation.","current":78,"true":92,"delta":14,"blind_spots":"0/8","risk_level":"Moderate","verdict":"Targeted improvements recommended.","domains":{"Identity Continuity":{"w":90,"h":100,"ori":0.15,"status":"VISIBLE"},"Family Integrity":{"w":100,"h":100,"ori":0,"status":"VISIBLE"},"Cultural Continuity":{"w":100,"h":100,"ori":0,"status":"VISIBLE"},"Information Rights":{"w":40,"h":80,"ori":1.06,"status":"ESTIMATED"},"Agency":{"w":70,"h":90,"ori":0.46,"status":"VISIBLE"},"Consent":{"w":60,"h":90,"ori":0.66,"status":"VISIBLE"},"Self-Determination":{"w":100,"h":100,"ori":0,"status":"VISIBLE"},"Memory Preservation":{"w":60,"h":80,"ori":0.59,"status":"VISIBLE"}}},{"rank":25,"framework":"ICCPR","country":"International","sector":"Human Rights","summary":"International treaty establishing fundamental civil and political rights, obligating State Parties to ensure these rights without discrimination.","current":43,"true":55,"delta":12,"blind_spots":"3/8","risk_level":"Moderate","verdict":"Targeted improvements recommended.","domains":{"Identity Continuity":{"w":1,"h":10,"ori":0.66,"status":"OMITTED"},"Family Integrity":{"w":1,"h":10,"ori":0.66,"status":"OMITTED"},"Cultural Continuity":{"w":70,"h":80,"ori":0.41,"status":"VISIBLE"},"Information Rights":{"w":30,"h":60,"ori":1.04,"status":"ESTIMATED"},"Agency":{"w":90,"h":90,"ori":0.14,"status":"VISIBLE"},"Consent":{"w":50,"h":80,"ori":0.8,"status":"VISIBLE"},"Self-Determination":{"w":100,"h":100,"ori":0,"status":"VISIBLE"},"Memory Preservation":{"w":1,"h":10,"ori":0.66,"status":"OMITTED"}}},{"rank":26,"framework":"HumanAbility Submission - National Allied Health Strategy","country":"Australia","sector":"Health, Aged Care, Disability Support, Child Care","summary":"Advocates for inclusion of Allied Health Assistants in the National Allied Health Workforce Strategy, addressing shortages and improving access.","current":16,"true":26,"delta":10,"blind_spots":"6/8","risk_level":"Moderate","verdict":"Targeted improvements recommended.","domains":{"Identity Continuity":{"w":1,"h":0,"ori":0,"status":"OMITTED"},"Family Integrity":{"w":1,"h":0,"ori":0,"status":"OMITTED"},"Cultural Continuity":{"w":20,"h":10,"ori":0.23,"status":"ESTIMATED"},"Information Rights":{"w":10,"h":10,"ori":0.33,"status":"ESTIMATED"},"Agency":{"w":50,"h":70,"ori":0.7,"status":"VISIBLE"},"Consent":{"w":1,"h":50,"ori":3.32,"status":"OMITTED"},"Self-Determination":{"w":40,"h":70,"ori":0.93,"status":"ESTIMATED"},"Memory Preservation":{"w":1,"h":0,"ori":0,"status":"OMITTED"}}},{"rank":27,"framework":"Former Forced Adoption Policies and Practices Inquiry","country":"Australia","sector":"Adoption","summary":"Senate Committee report on the Commonwealth's historical role in forced adoption — detailing harms and proposing a national redress framework.","current":81,"true":88,"delta":7,"blind_spots":"1/8","risk_level":"Low","verdict":"Framework performing adequately.","domains":{"Identity Continuity":{"w":90,"h":90,"ori":0.14,"status":"VISIBLE"},"Family Integrity":{"w":100,"h":100,"ori":0,"status":"VISIBLE"},"Cultural Continuity":{"w":10,"h":60,"ori":1.99,"status":"ESTIMATED"},"Information Rights":{"w":90,"h":90,"ori":0.14,"status":"VISIBLE"},"Agency":{"w":90,"h":90,"ori":0.14,"status":"VISIBLE"},"Consent":{"w":100,"h":100,"ori":0,"status":"VISIBLE"},"Self-Determination":{"w":90,"h":90,"ori":0.14,"status":"VISIBLE"},"Memory Preservation":{"w":80,"h":80,"ori":0.26,"status":"VISIBLE"}}},{"rank":28,"framework":"TRC Calls to Action","country":"Canada","sector":"Indigenous Rights / Child Rights","summary":"Truth and Reconciliation Commission of Canada's Calls to Action — redressing the legacy of residential schools and advancing reconciliation.","current":92,"true":98,"delta":6,"blind_spots":"0/8","risk_level":"Low","verdict":"Framework performing adequately.","domains":{"Identity Continuity":{"w":100,"h":100,"ori":0,"status":"VISIBLE"},"Family Integrity":{"w":100,"h":100,"ori":0,"status":"VISIBLE"},"Cultural Continuity":{"w":100,"h":100,"ori":0,"status":"VISIBLE"},"Information Rights":{"w":80,"h":90,"ori":0.29,"status":"VISIBLE"},"Agency":{"w":100,"h":100,"ori":0,"status":"VISIBLE"},"Consent":{"w":70,"h":90,"ori":0.46,"status":"VISIBLE"},"Self-Determination":{"w":100,"h":100,"ori":0,"status":"VISIBLE"},"Memory Preservation":{"w":90,"h":100,"ori":0.15,"status":"VISIBLE"}}},{"rank":29,"framework":"Financial Information for Criminal Offenses Law","country":"Spain","sector":"Criminal Justice","summary":"Spanish parliamentary session on an Organic Law facilitating financial information for prevention, detection, and prosecution of criminal offenses.","current":23,"true":29,"delta":6,"blind_spots":"6/8","risk_level":"Low","verdict":"Framework performing adequately.","domains":{"Identity Continuity":{"w":5,"h":10,"ori":0.43,"status":"BLIND SP."},"Family Integrity":{"w":1,"h":0,"ori":0,"status":"OMITTED"},"Cultural Continuity":{"w":1,"h":0,"ori":0,"status":"OMITTED"},"Information Rights":{"w":95,"h":95,"ori":0.07,"status":"VISIBLE"},"Agency":{"w":10,"h":40,"ori":1.33,"status":"ESTIMATED"},"Consent":{"w":70,"h":80,"ori":0.41,"status":"VISIBLE"},"Self-Determination":{"w":1,"h":10,"ori":0.66,"status":"OMITTED"},"Memory Preservation":{"w":1,"h":0,"ori":0,"status":"OMITTED"}}},{"rank":30,"framework":"Act relating to adoption","country":"Norway","sector":"Adoption","summary":"Norwegian legal act governing the processes and legal framework for adoption.","current":84,"true":89,"delta":5,"blind_spots":"0/8","risk_level":"Low","verdict":"Framework performing adequately.","domains":{"Identity Continuity":{"w":90,"h":90,"ori":0.14,"status":"VISIBLE"},"Family Integrity":{"w":90,"h":90,"ori":0.14,"status":"VISIBLE"},"Cultural Continuity":{"w":70,"h":80,"ori":0.41,"status":"VISIBLE"},"Information Rights":{"w":80,"h":90,"ori":0.29,"status":"VISIBLE"},"Agency":{"w":80,"h":90,"ori":0.29,"status":"VISIBLE"},"Consent":{"w":100,"h":100,"ori":0,"status":"VISIBLE"},"Self-Determination":{"w":80,"h":90,"ori":0.29,"status":"VISIBLE"},"Memory Preservation":{"w":80,"h":80,"ori":0.26,"status":"VISIBLE"}}},{"rank":31,"framework":"United Nations Declaration on the Rights of Indigenous Peoples","country":"International","sector":"Human Rights / Indigenous Rights","summary":"Affirms collective and individual rights of indigenous peoples, addressing historical injustices and promoting self-determination and cultural integrity.","current":76,"true":81,"delta":5,"blind_spots":"1/8","risk_level":"Low","verdict":"Framework performing adequately.","domains":{"Identity Continuity":{"w":95,"h":90,"ori":0.07,"status":"VISIBLE"},"Family Integrity":{"w":80,"h":85,"ori":0.27,"status":"VISIBLE"},"Cultural Continuity":{"w":95,"h":95,"ori":0.07,"status":"VISIBLE"},"Information Rights":{"w":15,"h":40,"ori":1.09,"status":"ESTIMATED"},"Agency":{"w":90,"h":90,"ori":0.14,"status":"VISIBLE"},"Consent":{"w":60,"h":80,"ori":0.59,"status":"VISIBLE"},"Self-Determination":{"w":100,"h":95,"ori":0,"status":"VISIBLE"},"Memory Preservation":{"w":70,"h":75,"ori":0.39,"status":"VISIBLE"}}}];
+
+const DOMAINS=["Identity Continuity","Family Integrity","Cultural Continuity","Information Rights","Agency","Consent","Self-Determination","Memory Preservation"];
+const DSHORT=["Identity","Family","Culture","Info.","Agency","Consent","Self-det.","Memory"];
+
+function dc(d){return d>=50?'#e05252':d>=25?'#e8a840':d>=10?'#5a9fd4':'#6ab87a'}
+function rc(l){return{Critical:'#e05252',High:'#e8a840',Moderate:'#5a9fd4',Low:'#6ab87a'}[l]||'#888'}
+function bc(l){return{Critical:'bc',High:'bh',Moderate:'bm',Low:'bl'}[l]||'bm'}
+function sc(s){return{OMITTED:'st-o','BLIND SP.':'st-b',ESTIMATED:'st-e',VISIBLE:'st-v'}[s]||'st-v'}
+function sl(s){return{OMITTED:'Omitted','BLIND SP.':'Blind spot',ESTIMATED:'Estimated',VISIBLE:'Visible'}[s]||s}
+
+// Domain ORI
+const dori={};
+DOMAINS.forEach(d=>{let s=0,n=0;DATA.forEach(f=>{if(f.domains[d]){s+=f.domains[d].ori;n++}});dori[d]=s/n});
+const sdm=[...DOMAINS].sort((a,b)=>dori[b]-dori[a]);
+const mORI=Math.max(...Object.values(dori));
+const dg=document.getElementById('domain-grid');
+sdm.forEach((d,i)=>{
+  const v=dori[d],p=(v/mORI*100).toFixed(0);
+  const col=v>1.5?'#e05252':v>0.8?'#e8a840':'#6ab87a';
+  dg.innerHTML+=`<div class="dc"><div class="dc-rank">#${i+1}</div><div class="dc-name">${d}</div><div class="dc-ori" style="color:${col}">${v.toFixed(2)}</div><div class="dc-bar"><div class="dc-fill" style="width:${p}%;background:${col}"></div></div></div>`;
+});
+
+// Jurisdiction
+const jmap={};
+DATA.forEach(f=>{if(!jmap[f.country])jmap[f.country]=[];jmap[f.country].push(f)});
+const jrows=Object.entries(jmap).map(([c,fs])=>({
+  country:c,n:fs.length,
+  avg:fs.reduce((s,f)=>s+f.delta,0)/fs.length,
+  cur:fs.reduce((s,f)=>s+f.current,0)/fs.length,
+  tru:fs.reduce((s,f)=>s+f.true,0)/fs.length
+})).sort((a,b)=>b.avg-a.avg);
+const mJ=Math.max(...jrows.map(r=>r.avg));
+
+const jt=document.getElementById('juris-table');
+jt.innerHTML='<tr><th>Jurisdiction</th><th>n</th><th>Δ avg</th><th></th><th>Level</th></tr>';
+jrows.forEach(r=>{
+  const col=dc(r.avg),bw=(r.avg/mJ*100).toFixed(0);
+  const lv=r.avg>=50?'Critical':r.avg>=25?'High':r.avg>=10?'Moderate':'Low';
+  jt.innerHTML+=`<tr><td class="j-name">${r.country}</td><td class="j-n">${r.n}</td><td class="j-delta" style="color:${col}">${r.avg.toFixed(1)}</td><td><div class="j-bar"><div class="j-bar-f" style="width:${bw}%;background:${col}"></div></div></td><td><span class="badge ${bc(lv)}">${lv}</span></td></tr>`;
+});
+
+// Chart
+const cw=document.getElementById('chart-wrap');
+cw.style.height=(jrows.length*26+40)+'px';
+new Chart(document.getElementById('jurisChart'),{
+  type:'bar',
+  data:{
+    labels:jrows.map(r=>r.country.length>18?r.country.slice(0,17)+'…':r.country),
+    datasets:[{
+      data:jrows.map(r=>+r.avg.toFixed(1)),
+      backgroundColor:jrows.map(r=>dc(r.avg)+'bb'),
+      borderColor:jrows.map(r=>dc(r.avg)),
+      borderWidth:1
+    }]
+  },
+  options:{
+    indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{ticks:{color:'#444',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'rgba(255,255,255,0.06)'}},
+      y:{ticks:{color:'#7a7874',font:{size:10}},grid:{display:false},border:{display:false}}
+    }
+  }
+});
+
+// Country filter
+const countries=[...new Set(DATA.map(f=>f.country))].sort();
+const csel=document.getElementById('filterCountry');
+countries.forEach(c=>{csel.innerHTML+=`<option value="${c}">${c}</option>`});
+
+// Radar
+function radar(fw,size){
+  const cx=size/2,cy=size/2,R=size/2-24,n=DOMAINS.length;
+  const ang=DOMAINS.map((_,i)=>(i/n)*2*Math.PI-Math.PI/2);
+  const pt=(r,a)=>[cx+r*Math.cos(a),cy+r*Math.sin(a)];
+  let rings='';
+  [25,50,75,100].forEach(p=>{
+    const r=R*p/100,pts=ang.map(a=>pt(r,a).join(',')).join(' ');
+    rings+=`<polygon points="${pts}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>`;
+  });
+  let spokes='';
+  ang.forEach(a=>{const[x,y]=pt(R,a);spokes+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>`;});
+  const wPts=ang.map((a,i)=>pt(R*Math.min(fw.domains[DOMAINS[i]].w,100)/100,a).join(',')).join(' ');
+  const hPts=ang.map((a,i)=>pt(R*Math.min(fw.domains[DOMAINS[i]].h,100)/100,a).join(',')).join(' ');
+  let lbls='';
+  ang.forEach((a,i)=>{
+    const lr=R+14;const[lx,ly]=pt(lr,a);
+    const anc=lx<cx-4?'end':lx>cx+4?'start':'middle';
+    lbls+=`<text x="${lx}" y="${ly+4}" text-anchor="${anc}" fill="#444" font-size="8.5" font-family="Inter,-apple-system,sans-serif">${DSHORT[i]}</text>`;
+  });
+  return`<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${rings}${spokes}<polygon points="${hPts}" fill="rgba(212,130,74,0.1)" stroke="rgba(212,130,74,0.25)" stroke-width="1"/><polygon points="${wPts}" fill="rgba(212,130,74,0.5)" stroke="#d4824a" stroke-width="1.5"/>${lbls}</svg>`;
+}
+
+// Findings (top omitted domains)
+function findings(fw){
+  const dom=DOMAINS.map(d=>({d,info:fw.domains[d]})).sort((a,b)=>b.info.ori-a.info.ori);
+  return dom.slice(0,3).filter(x=>x.info.ori>0.3).map(x=>{
+    const cls=x.info.status==='OMITTED'?'':x.info.status==='BLIND SP.'?'warn':'mod';
+    const stl=x.info.status==='OMITTED'?'':x.info.status==='BLIND SP.'?' — BLIND SPOT':' — ESTIMATED';
+    return`<div class="finding ${cls}"><div class="finding-title">${x.d} — ORI ${x.info.ori.toFixed(2)}${stl}</div><div class="finding-body">W: ${x.info.w}% visibility · H: ${x.info.h}% harm potential</div></div>`;
+  }).join('');
+}
+
+// Render cards
+function renderCards(data){
+  const list=document.getElementById('fw-list');
+  list.innerHTML='';
+  document.getElementById('fw-count').textContent=data.length+' frameworks';
+  data.forEach(fw=>{
+    const item=document.createElement('div');
+    item.className='fw-item';
+    const col=dc(fw.delta),rCol=rc(fw.risk_level);
+    item.innerHTML=`<div class="fw-header">
+      <div class="fw-num">${String(fw.rank).padStart(2,'0')}</div>
+      <div class="fw-info">
+        <div class="fw-name">${fw.framework}</div>
+        <div class="fw-meta">${fw.country} · ${fw.sector}</div>
+      </div>
+      <div class="fw-delta" style="color:${col}">Δ${fw.delta}</div>
+      <div class="fw-badge-col"><span class="badge ${bc(fw.risk_level)}">${fw.risk_level}</span></div>
+      <div class="fw-chevron">›</div>
+    </div>
+    <div class="fw-body">
+      <div class="fw-body-inner">
+        <div>
+          <div class="card-scores">
+            <div class="cs"><div class="cs-val" style="color:${col}">${fw.current}</div><div class="cs-lbl">Current</div></div>
+            <div class="cs"><div class="cs-val">${fw.true}</div><div class="cs-lbl">True</div></div>
+            <div class="cs"><div class="cs-val" style="color:${col}">Δ${fw.delta}</div><div class="cs-lbl">Delta</div></div>
+            <div class="cs"><div class="cs-val" style="color:${rCol}">${fw.blind_spots}</div><div class="cs-lbl">Blind spots</div></div>
+          </div>
+          <div class="fw-summary">${fw.summary}</div>
+          <div class="fw-verdict">${fw.verdict}</div>
+          <div style="margin-bottom:.75rem">${findings(fw)}</div>
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin-bottom:.5rem">Domain visibility</div>
+          <div class="dr-list">
+            ${DOMAINS.map(d=>{
+              const dom=fw.domains[d];
+              const wc=dom.w>=50?'#6ab87a':dom.w>=10?'#e8a840':'#e05252';
+              return`<div class="dr-row"><div class="dr-name">${d}</div><div class="dr-bars"><div class="dr-h" style="width:${dom.h}%;background:rgba(212,130,74,0.25)"></div><div class="dr-w" style="width:${Math.max(dom.w,1)}%;background:${wc}77"></div></div><div class="dr-pct" style="color:${wc}">${dom.w}%</div><div class="dr-pct">${dom.h}%</div><div class="dr-status ${sc(dom.status)}">${sl(dom.status)}</div></div>`;
+            }).join('')}
+          </div>
+        </div>
+        <div class="radar-wrap">
+          <div class="radar-lbl">Visibility vs harm potential</div>
+          ${radar(fw,240)}
+          <div class="radar-legend">
+            <span style="color:#d4824a">■ W visibility</span>
+            <span style="color:rgba(212,130,74,0.35)">■ H harm</span>
+          </div>
+        </div>
+      </div>
+    </div>`;
+    item.querySelector('.fw-header').addEventListener('click',()=>item.classList.toggle('open'));
+    list.appendChild(item);
+  });
+}
+
+function filter(){
+  const risk=document.getElementById('filterRisk').value;
+  const country=document.getElementById('filterCountry').value;
+  const q=document.getElementById('searchFw').value.toLowerCase();
+  renderCards(DATA.filter(f=>
+    (!risk||f.risk_level===risk)&&
+    (!country||f.country===country)&&
+    (!q||f.framework.toLowerCase().includes(q)||f.country.toLowerCase().includes(q)||f.sector.toLowerCase().includes(q))
+  ));
+}
+
+['filterRisk','filterCountry','searchFw'].forEach(id=>document.getElementById(id).addEventListener(id==='searchFw'?'input':'change',filter));
+renderCards(DATA);
+</script>
+</body>
+</html>
