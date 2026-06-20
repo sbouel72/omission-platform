@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TD-Nexus Observatory — Longitudinal Omission Pattern Analysis</title>
+<meta name="description" content="TD-Nexus public observatory: 8 governance domains ranked by systemic omission risk across 39 scored frameworks, with the full OMISSION Index.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f0f;--bg2:#161616;--bg3:#1d1d1d;--bg4:#252525;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#e0ddd8;--muted:#7a7874;--dim:#444440;
+  --accent:#d4824a;--accent2:#b8602a;
+  --critical:#e05252;--high:#e8a840;--moderate:#5a9fd4;--low:#6ab87a;
+  --systemic:#e05252;--significant:#e8a840;--incidental:#6ab87a;
+  --font:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  --mono:'JetBrains Mono','Fira Mono','Courier New',monospace;
+}
+html{background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body{max-width:1100px;margin:0 auto;padding:0 1rem 5rem}
+
+.nav{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 0;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:.75rem}
+.nav-logo{font-size:1.1rem;font-weight:700;letter-spacing:-.01em;color:var(--text)}
+.nav-logo span{color:var(--accent)}
+.nav-sub{font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.nav-links{display:flex;gap:.5rem;flex-wrap:wrap}
+.nav-link{font-size:12px;color:var(--muted);text-decoration:none;border:1px solid var(--border2);padding:.3rem .75rem;border-radius:2px}
+.nav-link:hover{color:var(--accent);border-color:var(--accent)}
+
+.hero{padding:3rem 0 2rem;border-bottom:1px solid var(--border)}
+.hero-eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem;font-weight:500}
+.hero-title{font-size:clamp(2rem,6vw,3.5rem);font-weight:200;letter-spacing:-.03em;line-height:1;color:var(--text);margin-bottom:.75rem}
+.hero-title strong{font-weight:700}
+.hero-desc{font-size:14px;color:var(--muted);max-width:560px;line-height:1.7;margin-bottom:2rem}
+.hero-scores{display:flex;gap:2.5rem;flex-wrap:wrap}
+.hs{border-left:2px solid var(--border2);padding-left:1rem}
+.hs-val{font-size:2.4rem;font-weight:200;letter-spacing:-.03em;line-height:1}
+.hs-val.c{color:var(--critical)}
+.hs-val.h{color:var(--high)}
+.hs-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-top:3px}
+
+.section{padding:2.5rem 0;border-bottom:1px solid var(--border)}
+.section:last-child{border-bottom:none}
+.s-head{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--dim);margin-bottom:.5rem;display:flex;align-items:center;gap:.75rem}
+.s-head::after{content:'';flex:1;height:1px;background:var(--border)}
+.s-sub{font-size:12px;color:var(--muted);margin-bottom:1.5rem;line-height:1.6;max-width:640px}
+
+.stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-bottom:0}
+.ss-cell{background:var(--bg2);padding:1.25rem 1rem}
+.ss-val{font-size:1.9rem;font-weight:200;letter-spacing:-.02em;line-height:1;margin-bottom:4px}
+.ss-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+.ss-sub{font-size:11px;color:var(--dim);margin-top:2px}
+@media(max-width:600px){.stat-strip{grid-template-columns:repeat(2,1fr)}}
+
+/* PATTERN CARDS */
+.pattern-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden}
+.pc{background:var(--bg2);padding:1rem 1.1rem;display:grid;grid-template-columns:2rem 1fr 5.5rem;gap:1rem;align-items:center}
+.pc-rank{font-family:var(--mono);font-size:11px;color:var(--dim)}
+.pc-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:.3rem}
+.pc-summary{font-size:12px;color:var(--muted);line-height:1.6}
+.pc-right{text-align:right}
+.pc-ori{font-size:1.4rem;font-weight:200;letter-spacing:-.02em;line-height:1}
+.pc-ori-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-top:3px}
+.pc-bar{height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;margin-top:1rem;grid-column:1/-1}
+.pc-bar-fill{height:100%;border-radius:2px}
+.badge{display:inline-block;font-size:9px;padding:2px 6px;border-radius:2px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-left:.4rem}
+.b-sys{background:rgba(224,82,82,.12);color:var(--systemic);border:1px solid rgba(224,82,82,.2)}
+.b-sig{background:rgba(232,168,64,.12);color:var(--significant);border:1px solid rgba(232,168,64,.2)}
+.b-inc{background:rgba(106,184,122,.12);color:var(--incidental);border:1px solid rgba(106,184,122,.2)}
+
+/* FRAMEWORK LIST */
+.fw-filters{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem;align-items:center}
+.fw-filters select,.fw-filters input{background:var(--bg2);border:1px solid var(--border2);color:var(--text);padding:.35rem .65rem;border-radius:2px;font-size:12px;font-family:var(--font);outline:none}
+.fw-filters select:focus,.fw-filters input:focus{border-color:var(--accent)}
+.fw-filters input{width:200px}
+.fw-count{font-size:11px;color:var(--dim);margin-left:auto}
+
+.fw-list{border:1px solid var(--border);border-radius:3px;overflow:hidden}
+.fw-item{border-bottom:1px solid var(--border);background:var(--bg2)}
+.fw-item:last-child{border-bottom:none}
+.fw-header{display:grid;grid-template-columns:2rem 1fr auto auto auto;gap:.75rem;align-items:center;padding:.85rem 1rem;cursor:pointer;transition:background .12s}
+.fw-header:hover{background:var(--bg3)}
+.fw-item.open .fw-header{background:var(--bg3)}
+.fw-num{font-family:var(--mono);font-size:11px;color:var(--dim);text-align:center}
+.fw-info .fw-name{font-size:13px;font-weight:500;color:var(--text);line-height:1.3}
+.fw-info .fw-meta{font-size:11px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fw-delta{font-family:var(--mono);font-size:15px;font-weight:700;min-width:48px;text-align:right}
+.fw-badge-col{min-width:72px;text-align:right}
+.fw-chevron{color:var(--dim);font-size:16px;transition:transform .2s;line-height:1}
+.fw-item.open .fw-chevron{transform:rotate(180deg)}
+.fw-body{display:none;border-top:1px solid var(--border);background:var(--bg3);padding:1rem 1rem 1.1rem 3.5rem}
+.fw-item.open .fw-body{display:block}
+.fw-body .card-scores{display:flex;gap:1.5rem;margin-bottom:.75rem}
+.cs{text-align:center}
+.cs-val{font-size:1.2rem;font-weight:200;letter-spacing:-.02em}
+.cs-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+.fw-omissions{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:.5rem}
+.fw-omissions strong{color:var(--text);font-weight:500}
+.fw-flags span{font-size:9px;color:var(--dim);background:var(--bg4);border:1px solid var(--border2);padding:2px 6px;border-radius:2px;margin-right:.35rem;display:inline-block;margin-top:.3rem}
+
+.bc{background:rgba(224,82,82,.12);color:var(--critical);border:1px solid rgba(224,82,82,.2)}
+.bh{background:rgba(232,168,64,.12);color:var(--high);border:1px solid rgba(232,168,64,.2)}
+.bm{background:rgba(90,159,212,.12);color:var(--moderate);border:1px solid rgba(90,159,212,.2)}
+.bl{background:rgba(106,184,122,.12);color:var(--low);border:1px solid rgba(106,184,122,.2)}
+
+.note{font-size:11px;color:var(--dim);line-height:1.7;border-left:2px solid var(--accent2);padding-left:.75rem;margin-top:1.5rem}
+
+.footer{padding:2rem 0 1rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--dim);flex-wrap:wrap;gap:1rem}
+.footer-logo{font-size:14px;font-weight:700;color:var(--text)}
+.footer-logo span{color:var(--accent)}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div>
+    <div class="nav-logo"><span>TD-Nexus</span> Observatory</div>
+    <div class="nav-sub">Longitudinal Omission Pattern Analysis</div>
+  </div>
+  <div class="nav-links">
+    <a class="nav-link" href="world-report.html">World Report ↗</a>
+    <a class="nav-link" href="https://sbouel72.github.io/omission-platform/omission-platform.html" target="_blank">Run Assessment ↗</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">TD-Nexus · Phase 5 · Public Observatory</div>
+  <div class="hero-title"><strong>Pattern</strong><br>Observatory</div>
+  <div class="hero-desc">8 governance domains, ranked by systemic omission risk across 39 scored frameworks. This is the longitudinal finding underneath the OMISSION Platform's World Report — which domains governance frameworks consistently fail to make visible, regardless of jurisdiction.</div>
+  <div class="hero-scores">
+    <div class="hs"><div class="hs-val c">Consent</div><div class="hs-lbl">Most omitted domain · avg ORI 1.64</div></div>
+    <div class="hs"><div class="hs-val h">39</div><div class="hs-lbl">Frameworks scored</div></div>
+    <div class="hs"><div class="hs-val c">25.2</div><div class="hs-lbl">Avg risk delta</div></div>
+  </div>
+</div>
+
+<!-- OVERVIEW -->
+<div class="section">
+  <div class="s-head">Overview</div>
+  <div class="stat-strip">
+    <div class="ss-cell">
+      <div class="ss-val" style="color:var(--critical)">41.5</div>
+      <div class="ss-lbl">Avg current score</div>
+      <div class="ss-sub">Perceived governance health</div>
+    </div>
+    <div class="ss-cell">
+      <div class="ss-val" style="color:var(--high)">66.7</div>
+      <div class="ss-lbl">Avg true score</div>
+      <div class="ss-sub">Actual harm potential</div>
+    </div>
+    <div class="ss-cell">
+      <div class="ss-val" style="color:var(--critical)">25.2</div>
+      <div class="ss-lbl">Avg risk delta</div>
+      <div class="ss-sub">Structurally hidden</div>
+    </div>
+    <div class="ss-cell">
+      <div class="ss-val">39</div>
+      <div class="ss-lbl">Frameworks</div>
+      <div class="ss-sub">5 flagged low-signal artifacts</div>
+    </div>
+  </div>
+</div>
+
+<!-- PATTERN INDEX -->
+<div class="section">
+  <div class="s-head">Pattern Index — 8 domains ranked by Omission Risk Index</div>
+  <div class="s-sub">Aggregated from the 312-row Domain Detail breakdown across every scored framework. ORI combines harm potential with structural invisibility — the higher the number, the more consistently this domain is missing from governance frameworks that should account for it.</div>
+  <div class="pattern-list" id="pattern-list"></div>
+</div>
+
+<!-- OMISSION INDEX -->
+<div class="section">
+  <div class="s-head">OMISSION Index — full framework list</div>
+  <div class="s-sub">Every framework scored to date, across 4 jurisdictionally-mixed categories: Child Welfare, Governance, Human Rights, Other. Click a row to see key omissions and pattern flags.</div>
+  <div class="fw-filters">
+    <select id="filterDomain"><option value="">All domains</option></select>
+    <select id="filterRisk">
+      <option value="">All levels</option>
+      <option value="Critical">Critical</option>
+      <option value="High">High</option>
+      <option value="Moderate">Moderate</option>
+      <option value="Low">Low</option>
+    </select>
+    <input id="searchFw" type="text" placeholder="Search framework…">
+    <span class="fw-count" id="fw-count"></span>
+  </div>
+  <div class="fw-list" id="fw-list"></div>
+  <div class="note">5 entries (Radiocommunications Act, Ontario Web Template, Act No. 14 of 2022, AWS WAF Challenge Page, N/A Security Challenge) are scraping artifacts with no substantive policy content. They're retained for dataset completeness and tagged <code>low_signal_artifact</code>, but excluded from Pattern Index aggregation above.</div>
+</div>
+
+<div class="footer">
+  <div>
+    <div class="footer-logo"><span>TD</span>-Nexus</div>
+    <div>Data refreshed on demand from the TD Control Sheet · Generated 2026-06-20</div>
+  </div>
+  <div>
+    Built on the <a href="https://github.com/sbouel72/omission-platform" style="color:var(--muted)">OMISSION Platform</a> · MIT Licence
+  </div>
+</div>
+
+<script>
+const PATTERNS = [
+{"domain":"Consent","ori":1.64,"occurrence":16,"omitted":15,"blindspot":1,"severity":"Systemic","summary":"Avg ORI 1.64 across 39 frameworks — OMITTED in 15, blind spot in 1. The single most systemically omitted domain across all scored governance frameworks."},
+{"domain":"Cultural Continuity","ori":1.51,"occurrence":17,"omitted":13,"blindspot":4,"severity":"Systemic","summary":"Avg ORI 1.51 across 39 frameworks — OMITTED in 13, blind spot in 4. Second most systemically omitted domain."},
+{"domain":"Memory Preservation","ori":1.40,"occurrence":16,"omitted":15,"blindspot":1,"severity":"Systemic","summary":"Avg ORI 1.40 across 39 frameworks — OMITTED in 15, blind spot in 1. Third most systemically omitted domain."},
+{"domain":"Information Rights","ori":1.36,"occurrence":12,"omitted":11,"blindspot":1,"severity":"Systemic","summary":"Avg ORI 1.36 across 39 frameworks — OMITTED in 11, blind spot in 1. Fourth most systemically omitted domain."},
+{"domain":"Self-Determination","ori":1.09,"occurrence":13,"omitted":12,"blindspot":1,"severity":"Significant","summary":"Avg ORI 1.09 across 39 frameworks — OMITTED in 12, blind spot in 1."},
+{"domain":"Agency","ori":1.08,"occurrence":13,"omitted":10,"blindspot":3,"severity":"Significant","summary":"Avg ORI 1.08 across 39 frameworks — OMITTED in 10, blind spot in 3."},
+{"domain":"Identity Continuity","ori":1.08,"occurrence":16,"omitted":12,"blindspot":4,"severity":"Significant","summary":"Avg ORI 1.08 across 39 frameworks — OMITTED in 12, blind spot in 4. Directly relevant to TD's adoptee-identity focus."},
+{"domain":"Family Integrity","ori":0.91,"occurrence":15,"omitted":14,"blindspot":1,"severity":"Incidental","summary":"Avg ORI 0.91 across 39 frameworks — OMITTED in 14, blind spot in 1. Lowest avg ORI of the 8 domains but still omitted in over a third of frameworks."}
+];
+
+const DATA = [{"name": "Truth and Reconciliation Commission, South Korea", "type": "Academic", "domain": "Human Rights", "current": 1, "true": 88, "delta": 87, "key_omissions": "consent mechanisms, memory preservation", "flags": ["systemic_blindspot"]}, {"name": "Jeugdwet, Netherlands", "type": "Policy", "domain": "Child Welfare", "current": 5, "true": 90, "delta": 85, "key_omissions": "identity continuity, genealogical access, consent mechanisms, memory preservation", "flags": ["child_voice_omission", "systemic_blindspot"]}, {"name": "Family Law Act 1975, Australia", "type": "Policy", "domain": "Child Welfare", "current": 1, "true": 85, "delta": 84, "key_omissions": "family integrity, consent mechanisms, memory preservation", "flags": ["family_integrity", "systemic_blindspot"]}, {"name": "Children, Youth and Families Act 2005, Victoria, Australia", "type": "Policy", "domain": "Child Welfare", "current": 1, "true": 82, "delta": 81, "key_omissions": "identity continuity, genealogical access, family integrity, consent mechanisms", "flags": ["child_voice_omission", "family_integrity", "systemic_blindspot"]}, {"name": "Children Act 1989, United Kingdom", "type": "Policy", "domain": "Child Welfare", "current": 14, "true": 90, "delta": 76, "key_omissions": "identity continuity, genealogical access, consent mechanisms, memory preservation", "flags": ["child_voice_omission", "significant_blindspot"]}, {"name": "HumanAbility Workforce Plan 2025, Australia", "type": "Policy", "domain": "Governance", "current": 19, "true": 81, "delta": 62, "key_omissions": "structural accountability, information rights", "flags": ["significant_blindspot"]}, {"name": "HumanAbility Workforce Plan 2024, Australia", "type": "Policy", "domain": "Governance", "current": 13, "true": 68, "delta": 55, "key_omissions": "structural accountability, information rights", "flags": ["systemic_blindspot"]}, {"name": "Commission to Inquire into Child Abuse, Ireland", "type": "Academic", "domain": "Child Welfare", "current": 36, "true": 76, "delta": 40, "key_omissions": "identity continuity, genealogical access", "flags": ["child_voice_omission", "significant_blindspot"]}, {"name": "Children and Social Work Act 2017, United Kingdom (England)", "type": "Policy", "domain": "Child Welfare", "current": 51, "true": 90, "delta": 39, "key_omissions": "identity continuity, genealogical access", "flags": ["child_voice_omission", "institutional_accountability"]}, {"name": "ICESCR, International", "type": "Treaty", "domain": "Human Rights", "current": 52, "true": 86, "delta": 34, "key_omissions": "structural accountability, information rights", "flags": ["significant_blindspot"]}, {"name": "SGB 8 - Kinder- und Jugendhilfe, Germany", "type": "Policy", "domain": "Child Welfare", "current": 53, "true": 84, "delta": 31, "key_omissions": "identity continuity, genealogical access", "flags": ["child_voice_omission", "significant_blindspot"]}, {"name": "Convention on the Rights of the Child, International", "type": "Treaty", "domain": "Child Welfare", "current": 48, "true": 79, "delta": 31, "key_omissions": "identity continuity, genealogical access", "flags": ["child_voice_omission", "institutional_accountability"]}, {"name": "Preventing Sex Trafficking and Strengthening Families Act, United States of America", "type": "Policy", "domain": "Child Welfare", "current": 65, "true": 90, "delta": 25, "key_omissions": "identity continuity, genealogical access", "flags": ["child_voice_omission", "institutional_accountability"]}, {"name": "CRC General Comment No. 11 on Indigenous Children, International (UN)", "type": "Policy", "domain": "Child Welfare", "current": 54, "true": 78, "delta": 24, "key_omissions": "identity continuity, genealogical access", "flags": ["child_voice_omission", "institutional_accountability"]}, {"name": "Hague Intercountry Adoption Convention, International", "type": "Treaty", "domain": "Child Welfare", "current": 66, "true": 88, "delta": 22, "key_omissions": "identity continuity, genealogical access", "flags": ["adoptee_exclusion", "institutional_accountability"]}, {"name": "ADOPTION ACT 2010, Ireland", "type": "Policy", "domain": "Child Welfare", "current": 69, "true": 91, "delta": 22, "key_omissions": "identity continuity, genealogical access", "flags": ["adoptee_exclusion", "institutional_accountability"]}, {"name": "Adoption and Children (Scotland) Act 2007, Scotland", "type": "Policy", "domain": "Child Welfare", "current": 68, "true": 90, "delta": 22, "key_omissions": "identity continuity, genealogical access", "flags": ["adoptee_exclusion", "institutional_accountability"]}, {"name": "Adoption Act 2010, Ireland", "type": "Policy", "domain": "Child Welfare", "current": 72, "true": 93, "delta": 21, "key_omissions": "identity continuity, genealogical access", "flags": ["adoptee_exclusion", "institutional_accountability"]}, {"name": "Adoption and Children Act 2002, United Kingdom", "type": "Policy", "domain": "Child Welfare", "current": 69, "true": 90, "delta": 21, "key_omissions": "identity continuity, genealogical access", "flags": ["adoptee_exclusion", "institutional_accountability"]}, {"name": "Adoption Act, British Columbia, Canada", "type": "Policy", "domain": "Child Welfare", "current": 70, "true": 88, "delta": 18, "key_omissions": "identity continuity, genealogical access", "flags": ["adoptee_exclusion", "institutional_accountability"]}, {"name": "Child Protection Act 1999, Australia", "type": "Policy", "domain": "Child Welfare", "current": 71, "true": 88, "delta": 17, "key_omissions": "identity continuity, genealogical access", "flags": ["adoptee_exclusion", "institutional_accountability"]}, {"name": "UN Convention on the Rights of the Child, International", "type": "Treaty", "domain": "Child Welfare", "current": 61, "true": 78, "delta": 17, "key_omissions": "identity continuity, genealogical access", "flags": ["child_voice_omission", "institutional_accountability"]}, {"name": "National Inquiry into MMIWG Final Report Executive Summary, Canada", "type": "Academic", "domain": "Human Rights", "current": 79, "true": 95, "delta": 16, "key_omissions": "structural accountability, information rights", "flags": ["indigenous_erasure", "institutional_accountability"]}, {"name": "Bill C-92: Indigenous Child and Family Services Act, Canada", "type": "Policy", "domain": "Child Welfare", "current": 78, "true": 92, "delta": 14, "key_omissions": "identity continuity, genealogical access", "flags": ["indigenous_erasure", "institutional_accountability"]}, {"name": "ICCPR, International", "type": "Treaty", "domain": "Human Rights", "current": 43, "true": 55, "delta": 12, "key_omissions": "structural accountability, information rights", "flags": ["significant_blindspot"]}, {"name": "HumanAbility Submission - National Allied Health Strategy, Australia", "type": "Policy", "domain": "Governance", "current": 16, "true": 26, "delta": 10, "key_omissions": "structural accountability, information rights", "flags": ["systemic_blindspot"]}, {"name": "Former Forced Adoption Policies and Practices Inquiry, Australia", "type": "Academic", "domain": "Child Welfare", "current": 81, "true": 88, "delta": 7, "key_omissions": "identity continuity, genealogical access", "flags": ["adoptee_exclusion", "institutional_accountability"]}, {"name": "TRC Calls to Action, Canada", "type": "Academic", "domain": "Human Rights", "current": 92, "true": 98, "delta": 6, "key_omissions": "structural accountability, information rights", "flags": ["indigenous_erasure", "institutional_accountability"]}, {"name": "Financial Information for Criminal Offenses Law, Spain", "type": "Policy", "domain": "Governance", "current": 23, "true": 29, "delta": 6, "key_omissions": "structural accountability, information rights", "flags": ["systemic_blindspot"]}, {"name": "Act relating to adoption, Norway", "type": "Policy", "domain": "Child Welfare", "current": 84, "true": 89, "delta": 5, "key_omissions": "identity continuity, genealogical access", "flags": ["adoptee_exclusion", "institutional_accountability"]}, {"name": "United Nations Declaration on the Rights of Indigenous Peoples, International", "type": "Treaty", "domain": "Human Rights", "current": 76, "true": 81, "delta": 5, "key_omissions": "structural accountability, information rights", "flags": ["indigenous_erasure", "institutional_accountability"]}, {"name": "Radiocommunications (Spectrum Licence Tax) Act 1997, Australia", "type": "Policy", "domain": "Governance", "current": 1, "true": 0, "delta": -1, "key_omissions": "not applicable - non-substantive document", "flags": ["low_signal_artifact"]}, {"name": "Ontario Web Template, Ontario, Canada", "type": "Other", "domain": "Governance", "current": 1, "true": 0, "delta": -1, "key_omissions": "not applicable - non-substantive document", "flags": ["low_signal_artifact"]}, {"name": "Act No. 14 of 2022, Ireland", "type": "Other", "domain": "Governance", "current": 1, "true": 0, "delta": -1, "key_omissions": "not applicable - non-substantive document", "flags": ["low_signal_artifact"]}, {"name": "AWS WAF Challenge Page", "type": "Other", "domain": "Other", "current": 1, "true": 0, "delta": -1, "key_omissions": "not applicable - non-substantive document", "flags": ["low_signal_artifact"]}, {"name": "N/A (Security Challenge)", "type": "Other", "domain": "Other", "current": 1, "true": 0, "delta": -1, "key_omissions": "not applicable - non-substantive document", "flags": ["low_signal_artifact"]}, {"name": "Queensland Legislation Portal, Australia (Queensland)", "type": "Other", "domain": "Governance", "current": 22, "true": 21, "delta": -1, "key_omissions": "structural accountability, information rights", "flags": ["significant_blindspot"]}, {"name": "Government Publications Access, Canada", "type": "Other", "domain": "Governance", "current": 5, "true": 3, "delta": -2, "key_omissions": "structural accountability, information rights", "flags": ["systemic_blindspot"]}, {"name": "Aged Care Personal Care Worker Registration Scheme, Australia", "type": "Policy", "domain": "Child Welfare", "current": 56, "true": 51, "delta": -5, "key_omissions": "structural accountability, information rights", "flags": ["institutional_accountability"]}];
+
+function sevClass(s){return s==='Systemic'?'b-sys':s==='Significant'?'b-sig':'b-inc'}
+function sevColor(s){return s==='Systemic'?'#e05252':s==='Significant'?'#e8a840':'#6ab87a'}
+
+const pl = document.getElementById('pattern-list');
+const maxOri = Math.max(...PATTERNS.map(p=>p.ori));
+PATTERNS.forEach((p,i)=>{
+  const col = sevColor(p.severity);
+  const pct = (p.ori/maxOri*100).toFixed(0);
+  pl.innerHTML += `<div class="pc">
+    <div class="pc-rank">#${i+1}</div>
+    <div>
+      <div class="pc-name">${p.domain}<span class="badge ${sevClass(p.severity)}">${p.severity}</span></div>
+      <div class="pc-summary">${p.summary}</div>
+    </div>
+    <div class="pc-right">
+      <div class="pc-ori" style="color:${col}">${p.ori.toFixed(2)}</div>
+      <div class="pc-ori-lbl">Avg ORI</div>
+    </div>
+    <div class="pc-bar"><div class="pc-bar-fill" style="width:${pct}%;background:${col}"></div></div>
+  </div>`;
+});
+
+function dc(d){return d>=50?'#e05252':d>=25?'#e8a840':d>=10?'#5a9fd4':'#6ab87a'}
+function level(d){return d>=50?'Critical':d>=25?'High':d>=10?'Moderate':'Low'}
+function bc(l){return{Critical:'bc',High:'bh',Moderate:'bm',Low:'bl'}[l]||'bm'}
+
+const domains = [...new Set(DATA.map(f=>f.domain))].sort();
+const dsel = document.getElementById('filterDomain');
+domains.forEach(d=>{dsel.innerHTML+=`<option value="${d}">${d}</option>`});
+
+function renderList(data){
+  const list = document.getElementById('fw-list');
+  list.innerHTML = '';
+  document.getElementById('fw-count').textContent = data.length + ' frameworks';
+  data.forEach((fw,idx)=>{
+    const lvl = level(fw.delta);
+    const col = dc(fw.delta);
+    const item = document.createElement('div');
+    item.className = 'fw-item' + (fw.flags.includes('low_signal_artifact') ? ' artifact' : '');
+    item.innerHTML = `<div class="fw-header">
+      <div class="fw-num">${String(idx+1).padStart(2,'0')}</div>
+      <div class="fw-info">
+        <div class="fw-name">${fw.name}</div>
+        <div class="fw-meta">${fw.type} · ${fw.domain}</div>
+      </div>
+      <div class="fw-delta" style="color:${col}">Δ${fw.delta}</div>
+      <div class="fw-badge-col"><span class="badge ${bc(lvl)}">${lvl}</span></div>
+      <div class="fw-chevron">›</div>
+    </div>
+    <div class="fw-body">
+      <div class="card-scores">
+        <div class="cs"><div class="cs-val" style="color:${col}">${fw.current}</div><div class="cs-lbl">Current</div></div>
+        <div class="cs"><div class="cs-val">${fw.true}</div><div class="cs-lbl">True</div></div>
+        <div class="cs"><div class="cs-val" style="color:${col}">Δ${fw.delta}</div><div class="cs-lbl">Delta</div></div>
+      </div>
+      <div class="fw-omissions"><strong>Key omissions:</strong> ${fw.key_omissions}</div>
+      <div class="fw-flags">${fw.flags.map(f=>`<span>${f}</span>`).join('')}</div>
+    </div>`;
+    item.querySelector('.fw-header').addEventListener('click', ()=>item.classList.toggle('open'));
+    list.appendChild(item);
+  });
+}
+
+function filterList(){
+  const domain = document.getElementById('filterDomain').value;
+  const risk = document.getElementById('filterRisk').value;
+  const q = document.getElementById('searchFw').value.toLowerCase();
+  renderList(DATA.filter(f=>
+    (!domain || f.domain===domain) &&
+    (!risk || level(f.delta)===risk) &&
+    (!q || f.name.toLowerCase().includes(q))
+  ));
+}
+
+['filterDomain','filterRisk','searchFw'].forEach(id=>{
+  document.getElementById(id).addEventListener(id==='searchFw'?'input':'change', filterList);
+});
+renderList(DATA);
+</script>
+</body>
+</html>
