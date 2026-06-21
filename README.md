@@ -122,7 +122,24 @@ No account required. No data sent to this site. API keys held in browser memory 
 
 ---
 
-MIT Licence
+Licence
+See [LICENSE](LICENSE) for full terms. In brief: the source code is MIT licensed (free to use/fork). The scoring methodology and dataset are All Rights Reserved — individual scores may be quoted with attribution; bulk access or applying the methodology requires a written licence. Enquiries: sbouel72@gmail.com
+
+---
+
+## Data & Methodology Usage
+
+The OMISSION scoring methodology and World Scoring Dataset are intellectual property of Shane Bouel. The following apply:
+
+**Free to use (no permission needed):**
+Quoting individual scores (e.g. "UNCRC 1989 scored 62/100, Delta +36") in articles, reports, or social posts, with attribution to: *OMISSION Platform (sbouel72.github.io/omission-platform), Shane Bouel, [year].*
+
+**Requires a written licence:**
+- Bulk download or redistribution of the dataset
+- Applying the OMISSION scoring methodology to additional frameworks for publication or commercial use
+- Integrating scores or methodology into third-party tools, research outputs, or products
+
+**To enquire about licensing:** sbouel72@gmail.com
 
 
 ---
