@@ -41,76 +41,76 @@ A risk that exists but is not seen is an omission. This Platform measures the st
 Rate each of the 8 domains yourself:
 
 - **H** — Harm potential (0–1): How badly could this domain harm the people it governs if it fails?
-- **W** — Visibility weight (0.01–1): How well do decision-makers actually see this domain's risks?
+- - **W** — Visibility weight (0.01–1): How well do decision-makers actually see this domain's risks?
+ 
+  - ### Deep Scan — AI Analysis
+ 
+  - Upload governance documents and an AI model reads them, returning evidence-based H and W scores per domain. For fully evidenced scores, use the OMISSION Standard v2.2.1 to conduct an auditor-verified assessment — the Standard produces H and W scores per domain that import directly into the Platform.
+ 
+  - ---
 
-### Deep Scan — AI Analysis
+  ## Scoring
 
-Upload governance documents and an AI model reads them, returning evidence-based H and W scores per domain. For fully evidenced scores, use the OMISSION Standard v2.2.1 to conduct an auditor-verified assessment — the Standard produces H and W scores per domain that import directly into the Platform.
+  | Output | What it means |
+  | :--- | :--- |
+  | **Visibility Deficit (H)** | Harm potential per domain — what the institution is not disclosing or not seeing (0–1) |
+  | **Disclosure Score (W)** | How well the institution makes risks visible to decision-makers (0.01–1) |
+  | **Omission Risk Index** | H × (1−W) — risk hiding in blind spots per domain |
+  | **Current Score** | Governance health as perceived by decision-makers (0–100) |
+  | **True Score** | Governance health based on actual harm potential (0–100) |
+  | **Risk Delta** | Gap between Current and True Score |
 
----
+  **Aggregate Score formula:**
 
-## Scoring
+  ```
+  Aggregate Score = Σ(Domain_Score_d × H_d) / Σ(H_d)
 
-| Output | What it means |
-| :--- | :--- |
-| **Visibility Deficit (H)** | Harm potential per domain — what the institution is not disclosing or not seeing (0–1) |
-| **Disclosure Score (W)** | How well the institution makes risks visible to decision-makers (0.01–1) |
-| **Omission Risk Index** | H × (1−W) — risk hiding in blind spots per domain |
-| **Current Score** | Governance health as perceived by decision-makers (0–100) |
-| **True Score** | Governance health based on actual harm potential (0–100) |
-| **Risk Delta** | Gap between Current and True Score |
+  Where: Domain_Score_d = 100 − (H_d × (1 − W_d) × 100)
+  ```
 
-**Aggregate Score formula:**
+  ---
 
-```
-Aggregate Score = Σ(Domain_Score_d × H_d) / Σ(H_d)
+  ## The 8 domains
 
-Where: Domain_Score_d = 100 − (H_d × (1 − W_d) × 100)
-```
+  | Domain | What It Protects |
+  | :--- | :--- |
+  | **Identity Continuity** | The right to know and maintain one's own name, origin, and legal identity |
+  | **Family Integrity** | The right to preserve family relationships and connections |
+  | **Cultural Continuity** | The right to retain access to language, culture, and community |
+  | **Information Rights** | The right to access records and decisions concerning oneself |
+  | **Agency** | The right to participate meaningfully in decisions affecting oneself |
+  | **Consent** | The right to informed, voluntary, and ongoing agreement |
+  | **Self-Determination** | The right to shape the rules and policies that govern one's life |
+  | **Memory Preservation** | The right to an accurate, accessible, and complete historical record |
 
----
+  ---
 
-## The 8 domains
+  ## AI providers (Deep Scan)
 
-| Domain | What It Protects |
-| :--- | :--- |
-| **Identity Continuity** | The right to know and maintain one's own name, origin, and legal identity |
-| **Family Integrity** | The right to preserve family relationships and connections |
-| **Cultural Continuity** | The right to retain access to language, culture, and community |
-| **Information Rights** | The right to access records and decisions concerning oneself |
-| **Agency** | The right to participate meaningfully in decisions affecting oneself |
-| **Consent** | The right to informed, voluntary, and ongoing agreement |
-| **Self-Determination** | The right to shape the rules and policies that govern one's life |
-| **Memory Preservation** | The right to an accurate, accessible, and complete historical record |
+  | Provider | Model | Key |
+  | :--- | :--- | :--- |
+  | Claude (Anthropic) | claude-opus-4-6 (recommended) · claude-sonnet-4-6 (fast) | console.anthropic.com |
+  | GPT-4o (OpenAI) | gpt-4o | platform.openai.com |
+  | Gemini (Google) | gemini-1.5-flash | aistudio.google.com |
 
----
+  ---
 
-## AI providers (Deep Scan)
+  ## Running it
 
-| Provider | Model | Key |
-| :--- | :--- | :--- |
-| Claude (Anthropic) | claude-sonnet-4-6 | console.anthropic.com |
-| GPT-4o (OpenAI) | gpt-4o | platform.openai.com |
-| Gemini (Google) | gemini-1.5-flash | aistudio.google.com |
+  **GitHub Pages (recommended):** Use the live demo link above.
 
----
+  **Local server:**
+  ```
+  python3 -m http.server 8080
+  ```
+  Then open: http://localhost:8080/omission-platform.html
 
-## Running it
+  ---
 
-**GitHub Pages (recommended):** Use the live demo link above.
+  ## Privacy
 
-**Local server:**
-```
-python3 -m http.server 8080
-```
-Then open: http://localhost:8080/omission-platform.html
+  No account required. No data sent to this site. API keys held in browser memory only.
 
----
+  ---
 
-## Privacy
-
-No account required. No data sent to this site. API keys held in browser memory only.
-
----
-
-MIT Licence
+  MIT Licence
