@@ -1,6 +1,6 @@
 # OMISSION Platform 2.2.1
 
-**Live demo → [Run it now](https://sbouel72.github.io/omission-platform/)**
+**Live demo → [Run it now](https://sbouel72.github.io/omission-platform/index.html)**
 
 A self-contained, browser-based tool that measures what governance frameworks say they cover versus what decision-makers actually see — and surfaces the gap as a quantified risk.
 
