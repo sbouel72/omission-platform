@@ -26,9 +26,9 @@ The **OMISSION Standard** is the theoretical and operational backbone of this Pl
 
 | Version | Status | Document |
 | :--- | :--- | :--- |
-| **v2.2.1** | ✅ **Current active standard** | [OMISSION_Standard_v2.2.1.docx](./OMISSION_Standard_v2.2.1.docx) |
-| v2.2 | Superseded | [OMISSION_Standard_v2.2.docx](./OMISSION_Standard_v2.2.docx) |
-| v2.1 | Superseded | [OMISSION_Standard_v2.1.docx](./OMISSION_Standard_v2.1.docx) |
+| **v2.2.1** | ✅ **Current active standard** | [OMISSION_Standard_v2.2.1.pdf](./OMISSION_Standard_v2.2.1.pdf) |
+| v2.2 | Superseded | [OMISSION_Standard_v2.2.pdf](./OMISSION_Standard_v2.2.pdf) |
+| v2.1 | Superseded | [OMISSION_Standard_v2.1.pdf](./OMISSION_Standard_v2.1.pdf) |
 
 **v2.2.1 patch notes:** Aggregate weighting formula made explicit for non-Platform auditors. Platform sync protocol now names the responsible maintainer and notification mechanism.
 
