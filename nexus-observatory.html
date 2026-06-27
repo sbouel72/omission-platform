@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TD-Nexus Observatory — Longitudinal Omission Pattern Analysis</title>
-<meta name="description" content="TD-Nexus public observatory: 8 governance domains ranked by systemic omission risk across 39 scored frameworks, with the full OMISSION Index.">
+<title>OMISSION — Pattern Observatory</title>
+<meta name="description" content="OMISSION Pattern Observatory: 8 governance domains ranked by systemic omission risk across 39 scored frameworks. Aggregated findings from the OMISSION Platform World Report.">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -109,26 +109,39 @@ body{max-width:1100px;margin:0 auto;padding:0 1rem 5rem}
 .footer{padding:2rem 0 1rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--dim);flex-wrap:wrap;gap:1rem}
 .footer-logo{font-size:14px;font-weight:700;color:var(--text)}
 .footer-logo span{color:var(--accent)}
+/* UNIFIED NAV */
+.omission-nav{position:sticky;top:0;z-index:100;background:rgba(15,14,12,.95);backdrop-filter:blur(12px);border-bottom:1px solid #2F2B24;padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:56px;font-family:system-ui,sans-serif;}
+.omission-nav a.brand{font-family:monospace;font-size:13px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#EDE8DC;text-decoration:none;}
+.omission-nav .ov-links{display:flex;gap:20px;align-items:center;}
+.omission-nav .ov-links a{font-size:13px;color:#9A8E7A;text-decoration:none;transition:.15s;}
+.omission-nav .ov-links a:hover{color:#EDE8DC;}
+.omission-nav .ov-links a.ov-cta{background:#D4792C;color:#fff;font-weight:700;padding:7px 16px;border-radius:8px;letter-spacing:.04em;}
+.omission-nav .ov-links a.ov-cta:hover{background:#E89A5A;color:#fff;}
+@media(max-width:600px){.omission-nav .ov-links a:not(.ov-cta){display:none;}.omission-nav{padding:0 16px;}}
+
 </style>
 </head>
 <body>
 
-<nav class="nav">
-  <div>
-    <div class="nav-logo"><span>TD-Nexus</span> Observatory</div>
-    <div class="nav-sub">Longitudinal Omission Pattern Analysis</div>
-  </div>
-  <div class="nav-links">
-    <a class="nav-link" href="world-report.html">World Report ↗</a>
-    <a class="nav-link" href="https://sbouel72.github.io/omission-platform/omission-platform.html" target="_blank">Run Assessment ↗</a>
+<nav class="omission-nav">
+  <a class="brand" href="index.html">OMISSION</a>
+  <div class="ov-links">
+    <a href="world-report.html">World Report</a>
+    <a href="nexus-observatory.html" style="color:#D4792C;">Observatory</a>
+    <a href="https://github.com/sbouel72/omission-platform/blob/main/OMISSION_Standard_v2.2.1.docx" target="_blank" rel="noopener">Standard ↗</a>
+    <a class="ov-cta" href="omission-platform.html">Run Assessment →</a>
   </div>
 </nav>
 
 <div class="hero">
-  <div class="hero-eyebrow">TD-Nexus · Phase 5 · Public Observatory</div>
+  <div class="hero-eyebrow">OMISSION PLATFORM · PATTERN ANALYSIS</div>
   <div class="hero-title"><strong>Pattern</strong><br>Observatory</div>
   <div class="hero-desc">8 governance domains, ranked by systemic omission risk across 39 scored frameworks. This is the longitudinal finding underneath the OMISSION Platform's World Report — which domains governance frameworks consistently fail to make visible, regardless of jurisdiction.</div>
-  <div class="hero-scores">
+  
+<div class="hero-context" style="margin-top:1.25rem;padding:.85rem 1.1rem;background:rgba(212,130,74,.06);border-left:2px solid #d4824a;border-radius:0 6px 6px 0;font-size:13px;color:#7a7874;line-height:1.7;max-width:600px;">
+  Aggregated findings from the <a href="world-report.html" style="color:#d4824a;">OMISSION World Report 2026 →</a> — 39 frameworks scored across 8 survivor-centred rights domains. Methodology governed by the <a href="https://github.com/sbouel72/omission-platform/blob/main/OMISSION_Standard_v2.2.1.docx" target="_blank" rel="noopener" style="color:#d4824a;">OMISSION Standard v2.2.1 ↗</a>.
+</div>
+<div class="hero-scores">
     <div class="hs"><div class="hs-val c">Consent</div><div class="hs-lbl">Most omitted domain · avg ORI 1.64</div></div>
     <div class="hs"><div class="hs-val h">39</div><div class="hs-lbl">Frameworks scored</div></div>
     <div class="hs"><div class="hs-val c">25.2</div><div class="hs-lbl">Avg risk delta</div></div>
@@ -191,8 +204,8 @@ body{max-width:1100px;margin:0 auto;padding:0 1rem 5rem}
 
 <div class="footer">
   <div>
-    <div class="footer-logo"><span>TD</span>-Nexus</div>
-    <div>Data refreshed on demand from the TD Control Sheet · Generated 2026-06-20</div>
+    <div class="footer-logo"><span>OMISSION</span> Platform</div>
+    <div>Pattern data generated 2026-06-20 · Aggregated from the OMISSION World Report</div>
   </div>
   <div>
     Built on the <a href="https://github.com/sbouel72/omission-platform" style="color:var(--muted)">OMISSION Platform</a> · MIT Licence

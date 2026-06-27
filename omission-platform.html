@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>OMISSION – Governance Observability Platform</title>
+<title>OMISSION Platform 2.2.1</title>
 <meta name="description" content="Score any governance framework against 8 domains. Measures what your framework can't see — and names the gap."/>
 <meta property="og:type" content="website"/>
-<meta property="og:title" content="OMISSION – Governance Observability Platform"/>
+<meta property="og:title" content="OMISSION Platform 2.2.1"/>
 <meta property="og:description" content="Score any governance framework against 8 domains. Measures what your framework can't see — and names the gap."/>
 <meta property="og:image" content="https://sbouel72.github.io/omission-platform/og-image.svg"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 <meta property="og:url" content="https://sbouel72.github.io/omission-platform/omission-platform.html"/>
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="OMISSION – Governance Observability Platform"/>
+<meta name="twitter:title" content="OMISSION Platform 2.2.1"/>
 <meta name="twitter:description" content="Score any governance framework against 8 domains. Measures what your framework can't see — and names the gap."/>
 <meta name="twitter:image" content="https://sbouel72.github.io/omission-platform/og-image.svg"/>
 <script src="https://cdn.tailwindcss.com"></script>
@@ -37,8 +37,8 @@
   --rose:#E05A5A;
   --rose-l:#F59090;
 }
-body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,sans-serif;height:100dvh;overflow:hidden}
-#root{height:100dvh}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,sans-serif;height:100dvh;overflow:hidden;padding-top:56px;}
+#root{height:calc(100dvh - 56px)}
 @keyframes spin{to{transform:rotate(360deg)}}
 .spin{animation:spin 1s linear infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
@@ -59,6 +59,18 @@ input[type=range]{width:100%;accent-color:var(--orange)}
 .provider-btn:hover{border-color:var(--muted2);color:var(--text)}
 .provider-btn.active{border-color:var(--orange);background:rgba(212,121,44,.1);color:var(--orange)}
 
+/* ── UNIFIED TOP NAV ─────────────────────────────────────────── */
+#omission-topnav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(15,14,12,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:56px;}
+#omission-topnav a.brand{font-family:monospace;font-size:13px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--text);text-decoration:none;}
+#omission-topnav .links{display:flex;gap:20px;align-items:center;}
+#omission-topnav .links a{font-size:13px;color:var(--muted);text-decoration:none;transition:.15s;}
+#omission-topnav .links a:hover{color:var(--text);}
+#omission-topnav .links a.cta{background:var(--orange);color:#fff;font-weight:700;padding:7px 16px;border-radius:8px;letter-spacing:.04em;}
+#omission-topnav .links a.cta:hover{background:var(--orange-l);color:#fff;}
+@media(max-width:640px){
+  #omission-topnav .links a:not(.cta){display:none;}
+  #omission-topnav{padding:0 16px;}
+}
 /* ── MOBILE ──────────────────────────────────────────────────── */
 @media(max-width:640px){
   .o-btn{padding:10px 16px;font-size:13px}
@@ -77,6 +89,15 @@ input[type=range]{width:100%;accent-color:var(--orange)}
 </style>
 </head>
 <body>
+<div id="omission-topnav">
+  <a class="brand" href="index.html">OMISSION</a>
+  <div class="links">
+    <a href="world-report.html">World Report</a>
+    <a href="nexus-observatory.html">Observatory</a>
+    <a href="https://github.com/sbouel72/omission-platform/blob/main/OMISSION_Standard_v2.2.1.docx" target="_blank" rel="noopener">Standard ↗</a>
+    <a class="cta" href="index.html">← Home</a>
+  </div>
+</div>
 <div id="root"></div>
 <script type="text/babel" data-presets="react">
 const{useState,useMemo,useCallback,useRef,useEffect}=React;
@@ -183,9 +204,9 @@ const STAGES=[
 const PROVIDERS=[
   {
     id:"anthropic",name:"Claude",sub:"Anthropic",placeholder:"sk-ant-…",
-    defaultModel:"claude-opus-4-5",
+    defaultModel:"claude-opus-4-6",
     models:[
-      {id:"claude-opus-4-5",           label:"claude-opus-4.5 (recommended)"},
+      {id:"claude-opus-4-6",           label:"claude-opus-4.6 (recommended)"},
       {id:"claude-sonnet-4-6",         label:"claude-sonnet-4.6 (fast)"},
       {id:"claude-haiku-4-5-20251001", label:"claude-haiku-4.5 (budget)"},
     ],
@@ -376,7 +397,7 @@ function NavRail({stage,setStage,unlocked,rows}){
 /* ── STORY STAGE ────────────────────────────────────────────── */
 function StoryStage({onStart,institution,setInstitution}){
   return(<div style={{maxWidth:840,margin:"0 auto",padding:"clamp(20px,5vw,40px) clamp(16px,4vw,24px)"}}>
-    <div className="o-tag">Governance Observability Platform</div>
+    <div className="o-tag">OMISSION Platform 2.2.1</div>
     <h1 className="text-2xl md:text-4xl font-black leading-tight mt-2" style={{color:"var(--text)"}}>
       Every governance framework has a score.<br/>
       <span style={{color:"var(--orange)"}}>This one measures what yours can't see.</span>
@@ -790,6 +811,7 @@ function ScoringExplainer(){
           </div>)}
         </div>
         <div className="text-xs" style={{color:"var(--muted2)"}}>Current Score and True Score appear in the tree below for full transparency. Blind Spot is the gap between them expressed as harm that isn't visible.</div>
+        <div className="text-xs mt-2" style={{color:"var(--muted2)"}}>Scoring governed by the <a href="https://github.com/sbouel72/omission-platform/blob/main/OMISSION_Standard_v2.2.1.docx" target="_blank" rel="noopener" style={{color:"var(--orange)"}}>OMISSION Standard v2.2.1 ↗</a></div>
       </div>
     </div>}
   </div>);
@@ -1046,7 +1068,7 @@ function ChallengeStage({rows,agg,institution}){
     const txt=
 `╔══════════════════════════════════════════════════════════════╗
 ║          O M I S S I O N   P L A T F O R M                  ║
-║          Governance Observability Report                     ║
+║          OMISSION Platform 2.2.1 Report                     ║
 ╚══════════════════════════════════════════════════════════════╝
 
   Generated: ${new Date().toLocaleString()}
@@ -1128,7 +1150,7 @@ ${domainLines}
   and it now has a name.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  Generated by OMISSION Governance Observability Platform
+  Generated by OMISSION Platform 2.2.1
   https://github.com/sbouel72/omission-platform
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
     const slug=institution.trim()?`_${institution.trim().toLowerCase().replace(/[^a-z0-9]+/g,"_").slice(0,30)}`:"";
@@ -1169,6 +1191,33 @@ ${domainLines}
       <button className="o-btn-ghost" onClick={()=>{navigator.clipboard?.writeText(`OMISSION | Reports ${fmt(agg.currentScore,0)} · True ${fmt(agg.trueScore,0)} · Gap +${fmt(agg.riskDelta,0)} · ${agg.blindSpotCount} blind spots · ${rubric.label}`);setCopied(true);setTimeout(()=>setCopied(false),2000);}}>
         {copied?<CheckCircle size={14} style={{color:"var(--orange)"}}/>:<Copy size={14}/>} {copied?"Copied!":"Copy summary"}
       </button>
+
+    <div className="mt-10 rounded-xl p-5" style={{background:"var(--card)",border:"1px solid var(--border)"}}>
+      <div className="text-xs uppercase tracking-widest font-bold mb-4" style={{color:"var(--muted2)"}}>What next</div>
+      <div className="space-y-3">
+        <a href="world-report.html" style={{display:"flex",alignItems:"center",justifyContent:"space-between",textDecoration:"none",padding:"12px 16px",borderRadius:8,border:"1px solid var(--border)",background:"var(--bg)"}}>
+          <div>
+            <div className="text-sm font-semibold" style={{color:"var(--text)"}}>See how your score compares</div>
+            <div className="text-xs mt-0.5" style={{color:"var(--muted)"}}>World Report 2026 — 31 frameworks scored across 16 jurisdictions</div>
+          </div>
+          <ArrowRight size={16} style={{color:"var(--orange)",flexShrink:0,marginLeft:12}}/>
+        </a>
+        <a href="nexus-observatory.html" style={{display:"flex",alignItems:"center",justifyContent:"space-between",textDecoration:"none",padding:"12px 16px",borderRadius:8,border:"1px solid var(--border)",background:"var(--bg)"}}>
+          <div>
+            <div className="text-sm font-semibold" style={{color:"var(--text)"}}>See which domains are most omitted globally</div>
+            <div className="text-xs mt-0.5" style={{color:"var(--muted)"}}>Pattern Observatory — systemic findings across 39 scored frameworks</div>
+          </div>
+          <ArrowRight size={16} style={{color:"var(--orange)",flexShrink:0,marginLeft:12}}/>
+        </a>
+        <a href="https://github.com/sbouel72/omission-platform/blob/main/OMISSION_Standard_v2.2.1.docx" target="_blank" rel="noopener" style={{display:"flex",alignItems:"center",justifyContent:"space-between",textDecoration:"none",padding:"12px 16px",borderRadius:8,border:"1px solid var(--border)",background:"var(--bg)"}}>
+          <div>
+            <div className="text-sm font-semibold" style={{color:"var(--text)"}}>Read the methodology</div>
+            <div className="text-xs mt-0.5" style={{color:"var(--muted)"}}>OMISSION Standard v2.2.1 — the scoring model, domain definitions, and proxy indicators</div>
+          </div>
+          <ArrowRight size={16} style={{color:"var(--orange)",flexShrink:0,marginLeft:12}}/>
+        </a>
+      </div>
+    </div>
       <button className="o-btn-ghost" onClick={()=>{if(navigator.share)navigator.share({title:"OMISSION Platform",text:`My governance score: ${fmt(agg.currentScore,0)} / 100 (true: ${fmt(agg.trueScore,0)}, gap: +${fmt(agg.riskDelta,0)})`,url:window.location.href}).catch(()=>{});}}><Share2 size={14}/> Share</button>
     </div>
   </div>);
