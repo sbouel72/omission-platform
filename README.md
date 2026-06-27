@@ -1,10 +1,22 @@
-# OMISSION — Governance Observability Platform
+# OMISSION Platform 2.2.1
 
-**Live demo → [Run it now](https://sbouel72.github.io/omission-platform/omission-platform.html)**
+**Live demo → [Run it now](https://sbouel72.github.io/omission-platform/)**
 
 A self-contained, browser-based tool that measures what governance frameworks say they cover versus what decision-makers actually see — and surfaces the gap as a quantified risk.
 
 No installation. No backend. No data leaves your browser.
+
+---
+
+## Pages
+
+| File | Role |
+| :--- | :--- |
+| [index.html](https://github.com/sbouel72/omission-platform/blob/main/index.html) | Landing page — explainer, scored UNCRC sample, methodology overview |
+| [omission-platform-welcome.html](https://github.com/sbouel72/omission-platform/blob/main/omission-platform-welcome.html) | Canonical alias — redirects to index.html |
+| [omission-platform.html](https://github.com/sbouel72/omission-platform/blob/main/omission-platform.html) | Core assessment tool — 7-stage flow, Quick Assessment, Deep Scan AI |
+| [world-report.html](https://github.com/sbouel72/omission-platform/blob/main/world-report.html) | World Report 2026 — compare your score against 31 frameworks across 16 jurisdictions |
+| [nexus-observatory.html](https://github.com/sbouel72/omission-platform/blob/main/nexus-observatory.html) | Pattern Observatory — systemic domain-level omission rankings across 39 frameworks |
 
 ---
 
