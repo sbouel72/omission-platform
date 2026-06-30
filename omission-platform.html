@@ -139,6 +139,9 @@ const BarChart2     =p=><SI {...p}><line x1="18" y1="20" x2="18" y2="10"/><line 
 const Bot           =p=><SI {...p}><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></SI>;
 const Key           =p=><SI {...p}><path d="m21 2-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></SI>;
 const Lock          =p=><SI {...p}><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></SI>;
+const Rss           =p=><SI {...p}><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></SI>;
+const Mic           =p=><SI {...p}><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></SI>;
+const ExternalLink  =p=><SI {...p}><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></SI>;
 
 /* ── SVG RADAR ──────────────────────────────────────────────── */
 function toXY(deg,r,cx,cy){const rad=((deg-90)*Math.PI)/180;return{x:cx+r*Math.cos(rad),y:cy+r*Math.sin(rad)};}
@@ -291,6 +294,106 @@ const PROVIDERS=[
     }
   },
 ];
+
+/* ── SUBSTACK ───────────────────────────────────────────────── */
+const CORS_PROXY="https://api.allorigins.win/get?url=";
+function normalizeSubstackHost(input){
+  let s=input.trim().replace(/^https?:\/\//,"").replace(/\/.*$/,"").trim();
+  if(s&&!s.includes(".")&&!s.endsWith(".substack.com"))s+=".substack.com";
+  return s;
+}
+async function fetchSubstackFeed(pubInput){
+  const host=normalizeSubstackHost(pubInput);
+  if(!host)throw new Error("Enter a valid Substack URL.");
+  const feedUrl=`https://${host}/feed`;
+  let r;
+  try{r=await fetch(CORS_PROXY+encodeURIComponent(feedUrl));}
+  catch(e){throw new Error("Network error — check your connection.");}
+  if(!r.ok)throw new Error(`Proxy error ${r.status}. Check the Substack URL and try again.`);
+  const j=await r.json();
+  if(!j.contents)throw new Error("No feed content returned. Is this a public Substack?");
+  return parseSubstackRSS(j.contents);
+}
+function parseSubstackRSS(xml){
+  const doc=new DOMParser().parseFromString(xml,"text/xml");
+  return Array.from(doc.querySelectorAll("item")).map(item=>{
+    const getText=tag=>item.getElementsByTagName(tag)[0]?.textContent?.trim()||"";
+    const enc=item.querySelector("enclosure");
+    let rawHtml="";
+    for(const el of item.getElementsByTagName("*")){
+      if(el.localName==="encoded"){rawHtml=el.textContent;break;}
+    }
+    if(!rawHtml)rawHtml=getText("description");
+    const div=document.createElement("div");
+    div.innerHTML=rawHtml;
+    const text=(div.textContent||div.innerText||"").replace(/\s+/g," ").trim();
+    return{title:getText("title"),date:getText("pubDate"),link:getText("link"),
+      isPodcast:!!enc,audioUrl:enc?.getAttribute("url")||null,content:text.slice(0,10000)};
+  });
+}
+function generatePodcastShowNotes(institution,rows,agg,deepScanMeta){
+  const rubric=getRubric(agg.currentScore,agg.riskDelta);
+  const visible=rows.filter(r=>r.W>=0.5);
+  const estimated=rows.filter(r=>r.W>=0.1&&r.W<0.5);
+  const omitted=rows.filter(r=>r.W<0.1);
+  const topORI=[...rows].sort((a,b)=>b.A-a.A).slice(0,3);
+  const inst=institution.trim()||"the assessed framework";
+  const domainTable=`| Domain | Visibility | Harm | ORI |\n|--------|-----------|------|-----|\n`+
+    rows.map(r=>`| ${r.name} | ${fmt(r.W*100,0)}% | ${fmt(r.H*100,0)}% | ${fmt(r.A,2)} |`).join("\n");
+  return `## Episode: What ${inst} Can't See
+
+**Platform:** OMISSION Governance Observability Platform
+**Verdict:** ${rubric.label}
+
+---
+
+### Episode Summary
+
+${deepScanMeta?.summary?deepScanMeta.summary+"\n\n":""}This episode examines the governance visibility gap in **${inst}** — measuring not just what the framework reports, but what it structurally cannot see.
+
+### Score Overview
+
+| Metric | Value |
+|--------|-------|
+| Current Score | ${fmt(agg.currentScore,0)} / 100 |
+| True Score (all domains visible) | ${fmt(agg.trueScore,0)} / 100 |
+| Blind Spot | +${fmt(agg.riskDelta,0)} points hidden |
+| Blind spot count | ${agg.blindSpotCount} / ${DOMAINS.length} domains |
+
+---
+
+### Key Findings
+
+**Visible domains** (actively measured): ${visible.length>0?visible.map(r=>r.name).join(", "):"None above threshold"}
+
+**Estimated domains** (acknowledged, not measured): ${estimated.length>0?estimated.map(r=>r.name).join(", "):"None"}
+
+**Omitted domains** (structurally invisible): ${omitted.length>0?omitted.map(r=>r.name).join(", "):"None"}
+
+**Highest omission risk:**
+${topORI.map(r=>`- ${r.name}: ORI ${fmt(r.A,2)} (Visibility ${fmt(r.W*100,0)}%, Harm ${fmt(r.H*100,0)}%)`).join("\n")}
+${deepScanMeta?.redFlags?.length>0?`\n**Red flags identified:**\n${deepScanMeta.redFlags.map(f=>`- ${f}`).join("\n")}`:""}
+
+---
+
+### Domain Breakdown
+
+${domainTable}
+
+---
+
+### The Falsifiable Ask
+
+Publish the detection probability for every domain you govern. Recompute your ethics score with the omitted rights returned to the denominator.
+
+If the score holds, say so publicly. If it drops, the gap that appears is the omission — and it now has a name.
+
+---
+
+*Assessed using [OMISSION Governance Observability Platform](https://sbouel72.github.io/omission-platform/)*
+
+*The Omission Risk Index (ORI) uses information theory to identify domains where harm is high and visibility is near-zero. A score of 100/100 is the worst possible outcome for the people a system governs.*`;
+}
 
 /* ── MATH ───────────────────────────────────────────────────── */
 const clamp01=x=>Math.max(0,Math.min(1,x));
@@ -603,8 +706,84 @@ async function extractPdfText(file,onProgress){
   return fullText;
 }
 
+function SubstackFetchPanel({onContentReady,selectedPosts}){
+  const[url,setUrl]=useState("");
+  const[posts,setPosts]=useState([]);
+  const[loading,setLoading]=useState(false);
+  const[error,setError]=useState(null);
+  const load=async()=>{
+    if(!url.trim())return;
+    setLoading(true);setError(null);setPosts([]);
+    try{
+      const items=await fetchSubstackFeed(url);
+      if(!items.length)throw new Error("No posts found in feed.");
+      setPosts(items);
+    }catch(e){setError(e.message);}
+    finally{setLoading(false);}
+  };
+  return(<div>
+    <div className="text-xs mb-2" style={{color:"var(--muted)"}}>Enter your Substack publication URL. Posts and podcast episodes will be fetched via RSS.</div>
+    <div className="flex gap-2 mb-3">
+      <input value={url} onChange={e=>setUrl(e.target.value)} placeholder="yourpub.substack.com"
+        className="flex-1 rounded-lg px-3 py-2 text-sm focus:outline-none"
+        style={{background:"var(--bg)",border:"1px solid var(--border)",color:"var(--text)"}}
+        onKeyDown={e=>e.key==="Enter"&&load()}/>
+      <button className="o-btn" onClick={load} disabled={loading||!url.trim()} style={{flexShrink:0,whiteSpace:"nowrap"}}>
+        {loading?<><Loader2 size={14} className="spin"/> Fetching…</>:<><Rss size={14}/> Fetch</>}
+      </button>
+    </div>
+    {error&&<div className="rounded-lg p-3 mb-3 text-sm" style={{background:"rgba(224,90,90,.07)",border:"1px solid var(--rose)",color:"var(--rose-l)"}}>{error}</div>}
+    {posts.length>0&&<div className="space-y-2 overflow-y-auto pr-1" style={{maxHeight:260}}>
+      <div className="text-xs uppercase tracking-widest font-bold mb-2" style={{color:"var(--muted2)"}}>{posts.length} post{posts.length!==1?"s":""} found — select to analyse</div>
+      {posts.map((p,i)=>{
+        const sel=selectedPosts.some(s=>s.title===p.title);
+        return(<div key={i} className="rounded-lg p-3 flex items-start justify-between gap-3 transition-all"
+          style={{background:sel?"rgba(212,121,44,.08)":"var(--card)",border:`1px solid ${sel?"var(--orange)":"var(--border)"}`}}>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-0.5">
+              {p.isPodcast&&<Mic size={11} style={{color:"var(--amber)",flexShrink:0}}/>}
+              <div className="text-sm font-semibold truncate" style={{color:"var(--text)"}}>{p.title||"(untitled)"}</div>
+            </div>
+            {p.date&&<div className="text-xs" style={{color:"var(--muted2)"}}>{new Date(p.date).toLocaleDateString()}</div>}
+            <div className="text-xs mt-1 truncate" style={{color:"var(--muted)"}}>{p.content.slice(0,100)}…</div>
+          </div>
+          <button className={sel?"o-btn-ghost":"o-btn"} style={{flexShrink:0,padding:"5px 12px",fontSize:12}} onClick={()=>onContentReady(p)}>
+            {sel?<><CheckCircle size={12}/> Added</>:<>+ Add</>}
+          </button>
+        </div>);
+      })}
+    </div>}
+  </div>);
+}
+
+function SubstackPostModal({open,onClose,content}){
+  const[copied,setCopied]=useState(false);
+  if(!open)return null;
+  const copy=()=>{navigator.clipboard?.writeText(content);setCopied(true);setTimeout(()=>setCopied(false),2500);};
+  return(<div style={{position:"fixed",inset:0,zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(0,0,0,.75)"}} onClick={onClose}>
+    <div style={{background:"var(--card)",border:"1px solid var(--border)",borderRadius:16,padding:24,maxWidth:660,width:"92%",maxHeight:"82vh",overflow:"hidden",display:"flex",flexDirection:"column"}} onClick={e=>e.stopPropagation()}>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <Rss size={16} style={{color:"var(--orange)"}}/>
+          <span className="font-bold text-sm" style={{color:"var(--text)"}}>Podcast Show Notes — ready to paste into Substack</span>
+        </div>
+        <button onClick={onClose} style={{background:"none",border:"none",cursor:"pointer",color:"var(--muted)"}}><XIcon size={16}/></button>
+      </div>
+      <div className="text-xs mb-3" style={{color:"var(--muted)"}}>Formatted in Markdown. Substack editor accepts Markdown when pasted. Copy → open editor → paste.</div>
+      <textarea readOnly value={content} style={{flex:1,background:"var(--bg)",border:"1px solid var(--border)",borderRadius:8,padding:12,color:"var(--text)",fontSize:12,fontFamily:"'JetBrains Mono',monospace,system-ui",resize:"none",overflowY:"auto",minHeight:260,lineHeight:1.6}}/>
+      <div className="flex gap-2 mt-4 flex-wrap">
+        <button className="o-btn" onClick={copy}>{copied?<><CheckCircle size={14}/> Copied!</>:<><Copy size={14}/> Copy to clipboard</>}</button>
+        <button className="o-btn-ghost" onClick={()=>window.open("https://substack.com/publish/post/new","_blank")}><ExternalLink size={14}/> Open Substack editor</button>
+        <button className="o-btn-ghost" onClick={onClose}>Dismiss</button>
+      </div>
+    </div>
+  </div>);
+}
+
 function DeepScanPanel({onResult,onSkip}){
   const[files,setFiles]=useState([]);
+  const[substackContent,setSubstackContent]=useState([]);
+  const[source,setSource]=useState("files");
   const[apiKey,setApiKey]=useState("");
   const[showKey,setShowKey]=useState(false);
   const[provider,setProvider]=useState(PROVIDERS[0]);
@@ -613,11 +792,14 @@ function DeepScanPanel({onResult,onSkip}){
   const[statusDetail,setStatusDetail]=useState("");
   const[error,setError]=useState(null);
   const inputRef=useRef(null);
+  const addSubstackPost=useCallback(post=>{
+    setSubstackContent(p=>p.some(x=>x.title===post.title)?p.filter(x=>x.title!==post.title):[...p,post]);
+  },[]);
 
   const switchProvider=p=>{setProvider(p);setModel(p.defaultModel);setApiKey("");setError(null);};
 
   const run=async()=>{
-    if(!files.length){setError({msg:"Upload at least one document.",detail:""});return;}
+    if(!files.length&&!substackContent.length){setError({msg:"Upload a document or select a Substack post.",detail:""});return;}
     if(!apiKey){setError({msg:`Paste your ${provider.name} API key to continue.`,detail:""});return;}
     setStatus("reading");setStatusDetail("");setError(null);
     try{
@@ -638,6 +820,9 @@ function DeepScanPanel({onResult,onSkip}){
           txt=await f.text();
         }
         textParts.push(`### ${f.name}\n${txt.slice(0,8000)}`);
+      }
+      for(const sc of substackContent){
+        textParts.push(`### ${sc.title}${sc.isPodcast?" [Podcast Episode]":""}\n${sc.content}`);
       }
       setStatus("calling");setStatusDetail("");
       const domainList=DOMAINS.map(d=>`- ${d.id} (${d.name}): ${d.desc}`).join("\n");
@@ -699,26 +884,53 @@ function DeepScanPanel({onResult,onSkip}){
       </div>
     </div>
 
-    {/* Drop zone */}
-    <div onClick={()=>inputRef.current?.click()} onDragOver={e=>e.preventDefault()}
-      onDrop={e=>{e.preventDefault();setFiles(p=>[...p,...Array.from(e.dataTransfer.files)]);}}
-      className="rounded-xl p-8 text-center cursor-pointer transition-all"
-      style={{border:`2px dashed ${files.length?"var(--orange)":"var(--border)"}`,background:"var(--card)"}}>
-      <Upload size={24} style={{color:files.length?"var(--orange)":"var(--muted2)",margin:"0 auto 10px"}}/>
-      {files.length>0
-        ?<div className="text-sm font-semibold" style={{color:"var(--orange)"}}>{files.length} file{files.length>1?"s":""} ready</div>
-        :<div className="text-sm" style={{color:"var(--muted)"}}>Drop documents here, or click to browse</div>}
-      <div className="text-xs mt-1" style={{color:"var(--muted2)"}}>.pdf · .txt · .md · .csv · plain-text — scanned PDFs OCR'd automatically</div>
-      <input ref={inputRef} type="file" multiple className="hidden" accept=".pdf,.txt,.md,.csv" onChange={e=>setFiles(p=>[...p,...Array.from(e.target.files)])}/>
+    {/* Source toggle */}
+    <div className="mb-3">
+      <div className="text-sm font-semibold mb-2" style={{color:"var(--text)"}}>Document source</div>
+      <div className="flex gap-2">
+        <button onClick={()=>setSource("files")} className={`provider-btn${source==="files"?" active":""}`}><Upload size={13}/> Upload files</button>
+        <button onClick={()=>setSource("substack")} className={`provider-btn${source==="substack"?" active":""}`}><Rss size={13}/> Substack</button>
+      </div>
     </div>
-    {files.length>0&&<div className="mt-2 space-y-1.5">
-      {files.map((f,i)=>(
-        <div key={i} className="flex items-center justify-between rounded-lg px-3 py-1.5 text-sm" style={{background:"var(--card)",border:"1px solid var(--border)"}}>
-          <div className="flex items-center gap-2 truncate" style={{color:"var(--text)"}}><FileText size={13} style={{color:"var(--muted2)"}}/><span className="truncate">{f.name}</span></div>
-          <button onClick={e=>{e.stopPropagation();setFiles(p=>p.filter((_,j)=>j!==i));}} style={{color:"var(--muted2)",marginLeft:8,cursor:"pointer",background:"none",border:"none"}}><XIcon size={13}/></button>
-        </div>
-      ))}
-    </div>}
+
+    {source==="files"&&<>
+      {/* Drop zone */}
+      <div onClick={()=>inputRef.current?.click()} onDragOver={e=>e.preventDefault()}
+        onDrop={e=>{e.preventDefault();setFiles(p=>[...p,...Array.from(e.dataTransfer.files)]);}}
+        className="rounded-xl p-8 text-center cursor-pointer transition-all"
+        style={{border:`2px dashed ${files.length?"var(--orange)":"var(--border)"}`,background:"var(--card)"}}>
+        <Upload size={24} style={{color:files.length?"var(--orange)":"var(--muted2)",margin:"0 auto 10px"}}/>
+        {files.length>0
+          ?<div className="text-sm font-semibold" style={{color:"var(--orange)"}}>{files.length} file{files.length>1?"s":""} ready</div>
+          :<div className="text-sm" style={{color:"var(--muted)"}}>Drop documents here, or click to browse</div>}
+        <div className="text-xs mt-1" style={{color:"var(--muted2)"}}>.pdf · .txt · .md · .csv · plain-text — scanned PDFs OCR'd automatically</div>
+        <input ref={inputRef} type="file" multiple className="hidden" accept=".pdf,.txt,.md,.csv" onChange={e=>setFiles(p=>[...p,...Array.from(e.target.files)])}/>
+      </div>
+      {files.length>0&&<div className="mt-2 space-y-1.5">
+        {files.map((f,i)=>(
+          <div key={i} className="flex items-center justify-between rounded-lg px-3 py-1.5 text-sm" style={{background:"var(--card)",border:"1px solid var(--border)"}}>
+            <div className="flex items-center gap-2 truncate" style={{color:"var(--text)"}}><FileText size={13} style={{color:"var(--muted2)"}}/><span className="truncate">{f.name}</span></div>
+            <button onClick={e=>{e.stopPropagation();setFiles(p=>p.filter((_,j)=>j!==i));}} style={{color:"var(--muted2)",marginLeft:8,cursor:"pointer",background:"none",border:"none"}}><XIcon size={13}/></button>
+          </div>
+        ))}
+      </div>}
+    </>}
+
+    {source==="substack"&&<>
+      <SubstackFetchPanel onContentReady={addSubstackPost} selectedPosts={substackContent}/>
+      {substackContent.length>0&&<div className="mt-3 space-y-1.5">
+        <div className="text-xs uppercase tracking-widest font-bold" style={{color:"var(--muted2)"}}>{substackContent.length} post{substackContent.length!==1?"s":""} queued for analysis</div>
+        {substackContent.map((sc,i)=>(
+          <div key={i} className="flex items-center justify-between rounded-lg px-3 py-1.5 text-sm" style={{background:"var(--card)",border:"1px solid var(--orange)"}}>
+            <div className="flex items-center gap-2 truncate" style={{color:"var(--text)"}}>
+              {sc.isPodcast?<Mic size={13} style={{color:"var(--amber)",flexShrink:0}}/>:<FileText size={13} style={{color:"var(--muted2)",flexShrink:0}}/>}
+              <span className="truncate">{sc.title}</span>
+            </div>
+            <button onClick={()=>setSubstackContent(p=>p.filter((_,j)=>j!==i))} style={{color:"var(--muted2)",marginLeft:8,cursor:"pointer",background:"none",border:"none"}}><XIcon size={13}/></button>
+          </div>
+        ))}
+      </div>}
+    </>}
 
     {/* Error display */}
     {error&&<div className="mt-4 rounded-lg p-4" style={{border:"1px solid var(--rose)",background:"rgba(224,90,90,.07)"}}>
@@ -1047,9 +1259,11 @@ function RedTeamStage({rows,deepScanMeta,agg}){
 }
 
 /* ── CHALLENGE ──────────────────────────────────────────────── */
-function ChallengeStage({rows,agg,institution}){
+function ChallengeStage({rows,agg,institution,deepScanMeta}){
   const visible=rows.filter(r=>r.W>=0.5),estimated=rows.filter(r=>r.W<0.5&&r.H>0),omitted=rows.filter(r=>r.W<0.1);
   const[copied,setCopied]=useState(false);
+  const[showPost,setShowPost]=useState(false);
+  const podcastNotes=useMemo(()=>generatePodcastShowNotes(institution,rows,agg,deepScanMeta),[institution,rows,agg,deepScanMeta]);
   const exportTxt=()=>{
     const rubricExp=getRubric(agg.currentScore,agg.riskDelta);
     const scoreInversion=agg.currentScore>=80?"THE SYSTEM IS SUCCEEDING AT HIDING ITS HARM EXPOSURE":agg.currentScore>=40?"THE SYSTEM IS UNDER PRESSURE — SOME HARM IS VISIBLE":"THE SYSTEM CAN NO LONGER HIDE ITS HARM EXPOSURE";
@@ -1219,7 +1433,9 @@ ${domainLines}
       </div>
     </div>
       <button className="o-btn-ghost" onClick={()=>{if(navigator.share)navigator.share({title:"OMISSION Platform",text:`My governance score: ${fmt(agg.currentScore,0)} / 100 (true: ${fmt(agg.trueScore,0)}, gap: +${fmt(agg.riskDelta,0)})`,url:window.location.href}).catch(()=>{});}}><Share2 size={14}/> Share</button>
+      <button className="o-btn-ghost" onClick={()=>setShowPost(true)}><Rss size={14}/> Podcast show notes</button>
     </div>
+    <SubstackPostModal open={showPost} onClose={()=>setShowPost(false)} content={podcastNotes}/>
   </div>);
 }
 
@@ -1251,7 +1467,7 @@ function App(){
         {stage==="scenario"  &&<ScenarioStage baseScores={safeScores} rows={rows}/>}
         {stage==="signature" &&<SignatureStage rows={rows}/>}
         {stage==="redteam"   &&<RedTeamStage rows={rows} deepScanMeta={deepScanMeta} agg={agg}/>}
-        {stage==="challenge" &&<ChallengeStage rows={rows} agg={agg} institution={institution}/>}
+        {stage==="challenge" &&<ChallengeStage rows={rows} agg={agg} institution={institution} deepScanMeta={deepScanMeta}/>}
       </div>
     </div>
     </div>
